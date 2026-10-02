@@ -1,0 +1,82 @@
+plugins {
+	id 'fabric-loom' version "${loom_version}"
+}
+
+version = project.mod_version
+group = project.maven_group
+
+base {
+	archivesName = project.archives_base_name
+}
+
+dependencies {
+	minecraft "com.mojang:minecraft:${project.minecraft_version}"
+	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
+	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+
+	// The exact jars from the 1.21.11 Main instance; compiled against, never bundled.
+	modCompileOnly files("libs/tweakeroo-fabric-1.21.11-0.27.15.jar")
+	modCompileOnly files("libs/malilib-fabric-1.21.11-0.27.20.jar")
+	modLocalRuntime files("libs/tweakeroo-fabric-1.21.11-0.27.15.jar")
+	modLocalRuntime files("libs/malilib-fabric-1.21.11-0.27.20.jar")
+	modLocalRuntime files("libs/conditional-mixin-fabric-0.6.4.jar")
+}
+
+// Dev-only automated test (src/devtest), loaded in `runClient`, never part of the release jar.
+sourceSets {
+	devtest {
+		compileClasspath += sourceSets.main.compileClasspath + sourceSets.main.output
+		runtimeClasspath += sourceSets.main.runtimeClasspath + sourceSets.main.output
+	}
+}
+
+loom {
+	mods {
+		"tweakeroo_freecam_plus" {
+			sourceSet sourceSets.main
+		}
+		"freecamplus_devtest" {
+			sourceSet sourceSets.devtest
+		}
+	}
+	runs {
+		client {
+			source sourceSets.devtest
+			programArgs "--quickPlaySingleplayer", "devtest"
+		}
+	}
+}
+
+// Test jar for a throwaway copy of the real instance (same remapping as the release jar).
+def devtestJar = tasks.register("devtestJar", Jar) {
+	from sourceSets.devtest.output
+	archiveBaseName = "freecamplus-devtest"
+	archiveClassifier = "dev"
+	destinationDirectory = layout.buildDirectory.dir("devlibs")
+}
+
+tasks.register("remapDevtestJar", net.fabricmc.loom.task.RemapJarTask) {
+	inputFile = devtestJar.flatMap { it.archiveFile }
+	archiveBaseName = "freecamplus-devtest"
+	addNestedDependencies = false
+	classpath.from(sourceSets.devtest.compileClasspath)
+}
+
+processResources {
+	inputs.property "version", project.version
+
+	filesMatching("fabric.mod.json") {
+		expand "version": inputs.properties.version
+	}
+}
+
+tasks.withType(JavaCompile).configureEach {
+	it.options.release = 21
+	it.options.encoding = "UTF-8"
+}
+
+java {
+	sourceCompatibility = JavaVersion.VERSION_21
+	targetCompatibility = JavaVersion.VERSION_21
+}

@@ -1,0 +1,13 @@
+{
+	"required": true,
+	"package": "io.github.autyi6969.freecamplus.mixin",
+	"compatibilityLevel": "JAVA_21",
+	"client": [
+		"CameraEntityAccessor",
+		"CameraEntityMixin",
+		"MouseMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}
