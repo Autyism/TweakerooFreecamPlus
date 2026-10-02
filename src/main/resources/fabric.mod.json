@@ -1,0 +1,25 @@
+{
+	"schemaVersion": 1,
+	"id": "tweakeroo_freecam_plus",
+	"version": "${version}",
+	"name": "Tweakeroo Freecam Plus",
+	"description": "Personal add-on for Tweakeroo's Free Camera: middle click sets/removes waypoints, Ctrl + scroll changes the sprint speed.",
+	"authors": [
+		"Autyi6969"
+	],
+	"license": "LGPL-3.0",
+	"environment": "client",
+	"entrypoints": {
+		"client": ["io.github.autyi6969.freecamplus.FreecamPlus"]
+	},
+	"mixins": [
+		"freecamplus.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.17.0",
+		"minecraft": "1.21.11",
+		"java": ">=21",
+		"fabric-api": "*",
+		"tweakeroo": "0.27.15"
+	}
+}
