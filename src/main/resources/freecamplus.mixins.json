@@ -5,7 +5,9 @@
 	"client": [
 		"CameraEntityAccessor",
 		"CameraEntityMixin",
-		"MouseMixin"
+		"KeyboardMixin",
+		"MouseMixin",
+		"StickyKeyBindingMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1

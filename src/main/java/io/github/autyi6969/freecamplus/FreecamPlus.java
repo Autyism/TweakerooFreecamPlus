@@ -44,6 +44,7 @@ public class FreecamPlus implements ClientModInitializer {
 	private static final double PICK_DEGREES = 6.0;
 	private static final int RING = 62;
 	private static final int COLOR = 0xFFFF55FF;
+	private static final int SELF_COLOR = 0xFF55FFFF;
 
 	@Override
 	public void onInitializeClient() {
@@ -122,8 +123,12 @@ public class FreecamPlus implements ClientModInitializer {
 
 	private static void renderWorld() {
 		MinecraftClient client = MinecraftClient.getInstance();
-		if (client.world == null || Markers.list().isEmpty()) {
+		if (client.world == null) {
 			return;
+		}
+		if (CameraEntity.getCamera() != null && SelfPointer.visible() && client.player != null) {
+			// your own body, outlined through walls
+			GizmoDrawing.box(client.player.getBoundingBox().expand(0.05), DrawStyle.stroked(SELF_COLOR, 3.0F)).ignoreOcclusion();
 		}
 		String here = dimension(client);
 		for (Markers.Marker marker : Markers.list()) {
@@ -144,6 +149,11 @@ public class FreecamPlus implements ClientModInitializer {
 		if (!Markers.list().isEmpty()) {
 			drawMarkerArrows(context, client);
 		}
+		if (CameraEntity.getCamera() != null && SelfPointer.visible()) {
+			Vec3d body = client.player.getEyePos();
+			int distance = (int) Math.round(body.distanceTo(client.gameRenderer.getCamera().getCameraPos()));
+			drawArrow(context, client, body, SELF_COLOR, Text.literal("你  " + distance + "格"));
+		}
 		if (CameraEntity.getCamera() != null) {
 			boolean on = CameraEntityAccessor.freecamplus$isSprinting();
 			String factor = SprintSpeed.factor() == Math.floor(SprintSpeed.factor())
@@ -158,38 +168,42 @@ public class FreecamPlus implements ClientModInitializer {
 	/** One arrow per waypoint on a ring around the crosshair, with its number and distance. */
 	private static void drawMarkerArrows(DrawContext context, MinecraftClient client) {
 		String here = dimension(client);
-		Camera camera = client.gameRenderer.getCamera();
-		Vec3d eye = camera.getCameraPos();
-		float cameraYaw = camera.getYaw();
-		int screenWidth = context.getScaledWindowWidth();
-		int centerX = screenWidth / 2;
-		int centerY = context.getScaledWindowHeight() / 2;
+		Vec3d eye = client.gameRenderer.getCamera().getCameraPos();
 		for (Markers.Marker marker : Markers.list()) {
 			if (!marker.dimension().equals(here)) {
 				continue;
 			}
 			Vec3d spot = Vec3d.ofCenter(marker.pos());
-			float angle = (float) Math.toRadians(relativeAngle(eye, cameraYaw, spot));
-			context.getMatrices().pushMatrix();
-			context.getMatrices().translate(centerX, centerY);
-			context.getMatrices().rotate(angle);
-			for (int row = 0; row < 6; row++) {
-				context.fill(-row, -RING + row, row + 1, -RING + row + 1, COLOR);
-			}
-			context.getMatrices().popMatrix();
-
 			int distance = (int) Math.round(spot.distanceTo(eye));
 			double height = spot.y - eye.y;
-			Text label = Text.literal("标记" + marker.number() + "  " + distance + "格"
-					+ (height > 3 ? "（上方）" : height < -3 ? "（下方）" : ""));
-			int width = client.textRenderer.getWidth(label);
-			int labelRadius = RING + 12;
-			int x = centerX + Math.round(MathHelper.sin(angle) * (labelRadius + width / 2F)) - width / 2;
-			int y = centerY - Math.round(MathHelper.cos(angle) * labelRadius) - 4;
-			x = MathHelper.clamp(x, 2, screenWidth - width - 2);
-			context.fill(x - 2, y - 1, x + width + 2, y + 9, 0x80000000);
-			context.drawTextWithShadow(client.textRenderer, label, x, y, COLOR);
+			drawArrow(context, client, spot, COLOR, Text.literal("标记" + marker.number() + "  " + distance + "格"
+					+ (height > 3 ? "（上方）" : height < -3 ? "（下方）" : "")));
 		}
+	}
+
+	/** An arrow on the ring around the crosshair, turned towards {@code spot}, with a label. */
+	private static void drawArrow(DrawContext context, MinecraftClient client, Vec3d spot, int color, Text label) {
+		Camera camera = client.gameRenderer.getCamera();
+		Vec3d eye = camera.getCameraPos();
+		int screenWidth = context.getScaledWindowWidth();
+		int centerX = screenWidth / 2;
+		int centerY = context.getScaledWindowHeight() / 2;
+		float angle = (float) Math.toRadians(relativeAngle(eye, camera.getYaw(), spot));
+		context.getMatrices().pushMatrix();
+		context.getMatrices().translate(centerX, centerY);
+		context.getMatrices().rotate(angle);
+		for (int row = 0; row < 6; row++) {
+			context.fill(-row, -RING + row, row + 1, -RING + row + 1, color);
+		}
+		context.getMatrices().popMatrix();
+
+		int width = client.textRenderer.getWidth(label);
+		int labelRadius = RING + 12;
+		int x = centerX + Math.round(MathHelper.sin(angle) * (labelRadius + width / 2F)) - width / 2;
+		int y = centerY - Math.round(MathHelper.cos(angle) * labelRadius) - 4;
+		x = MathHelper.clamp(x, 2, screenWidth - width - 2);
+		context.fill(x - 2, y - 1, x + width + 2, y + 9, 0x80000000);
+		context.drawTextWithShadow(client.textRenderer, label, x, y, color);
 	}
 
 	/** Degrees to turn from the camera's yaw to face {@code to}; same as QoL Bundle's Sound Compass. */
