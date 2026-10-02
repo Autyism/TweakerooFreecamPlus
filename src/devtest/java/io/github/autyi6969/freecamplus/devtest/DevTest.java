@@ -106,6 +106,71 @@ public class DevTest implements ClientModInitializer {
 		}
 	}
 
+	/** A real keyboard event for the sprint key, through the game's own key handler. */
+	private static void sprintKeyEvent(MinecraftClient client, int action) {
+		try {
+			var resolver = net.fabricmc.loader.api.FabricLoader.getInstance().getMappingResolver();
+			Method method = net.minecraft.client.Keyboard.class.getDeclaredMethod(
+					resolver.mapMethodName("intermediary", "net.minecraft.class_309", "method_1466", "(JILnet/minecraft/class_11908;)V"),
+					long.class, int.class, net.minecraft.client.input.KeyInput.class);
+			method.setAccessible(true);
+			int code = KeyBindingHelper.getBoundKeyOf(client.options.sprintKey).getCode();
+			method.invoke(client.keyboard, client.getWindow().getHandle(), action, new net.minecraft.client.input.KeyInput(code, 0, 0));
+		} catch (ReflectiveOperationException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	private boolean bodyToggleBefore;
+	private boolean flickered;
+
+	/** Toggle Sprint on, Ctrl held for 15 ticks with key-repeats: sprint must stay ON every tick. */
+	private void flickerSteps() {
+		run("toggle sprint on, remember the body's toggle", client -> {
+			client.options.getSprintToggled().setValue(true);
+			bodyToggleBefore = client.options.sprintKey.isPressed();
+			flickered = false;
+			SprintSpeed.testSprintHeld = true;
+			sprintKeyEvent(client, org.lwjgl.glfw.GLFW.GLFW_PRESS);
+		});
+		steps.add(new Step("hold Ctrl with key-repeats", (client, t) -> {
+			sprintKeyEvent(client, org.lwjgl.glfw.GLFW.GLFW_REPEAT);
+			if (t > 1 && !io.github.autyi6969.freecamplus.mixin.CameraEntityAccessor.freecamplus$isSprinting()) {
+				flickered = true;
+			}
+			return t >= 15;
+		}));
+		check("sprint stays ON while Ctrl is held (no flicker)", (client, t) -> !flickered);
+		run("let go of Ctrl", client -> {
+			sprintKeyEvent(client, org.lwjgl.glfw.GLFW.GLFW_RELEASE);
+			SprintSpeed.testSprintHeld = false;
+		});
+		waitTicks(3);
+		check("sprint OFF after letting go (not moving)", (client, t) ->
+				!io.github.autyi6969.freecamplus.mixin.CameraEntityAccessor.freecamplus$isSprinting());
+		check("body's toggle sprint unchanged by Ctrl in freecam", (client, t) -> client.options.sprintKey.isPressed() == bodyToggleBefore);
+	}
+
+	/** Two taps must not show the pointer, three quick taps must. */
+	private void selfPointerSteps() {
+		run("tap Ctrl twice", client -> {
+			for (int i = 0; i < 2; i++) {
+				sprintKeyEvent(client, org.lwjgl.glfw.GLFW.GLFW_PRESS);
+				sprintKeyEvent(client, org.lwjgl.glfw.GLFW.GLFW_RELEASE);
+			}
+		});
+		check("two taps: no pointer", (client, t) -> !io.github.autyi6969.freecamplus.SelfPointer.visible());
+		waitTicks(20); // longer than the tap window
+		run("tap Ctrl three times", client -> {
+			for (int i = 0; i < 3; i++) {
+				sprintKeyEvent(client, org.lwjgl.glfw.GLFW.GLFW_PRESS);
+				sprintKeyEvent(client, org.lwjgl.glfw.GLFW.GLFW_RELEASE);
+			}
+		});
+		check("three taps: pointer to yourself shown", (client, t) -> io.github.autyi6969.freecamplus.SelfPointer.visible());
+		screenshot("06_self_pointer");
+	}
+
 	private static Vec3d cam() {
 		return CameraEntity.getCamera().getEntityPos();
 	}
@@ -221,6 +286,22 @@ public class DevTest implements ClientModInitializer {
 		run("middle click", DevTest::middleClick);
 		waitTicks(3);
 		check("two waypoints", (client, t) -> Markers.list().size() == 2);
+
+		selfPointerSteps();
+		flickerSteps();
+
+		run("speed up to x6, then switch freecam off and on", client -> {
+			SprintSpeed.testSprintHeld = true;
+			scroll(client, 1.0);
+			scroll(client, 1.0);
+			SprintSpeed.testSprintHeld = false;
+			LOG.info("[DevTest] INFO factor before re-toggle: {}", SprintSpeed.factor());
+			FeatureToggle.TWEAK_FREE_CAMERA.setBooleanValue(false);
+		});
+		waitTicks(3);
+		run("freecam on again", client -> FeatureToggle.TWEAK_FREE_CAMERA.setBooleanValue(true));
+		waitTicks(3);
+		check("re-toggled freecam is back at x3", (client, t) -> SprintSpeed.factor() == 3.0);
 
 		run("free camera off", client -> FeatureToggle.TWEAK_FREE_CAMERA.setBooleanValue(false));
 		waitTicks(10);
