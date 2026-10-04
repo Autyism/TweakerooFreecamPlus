@@ -1,7 +1,7 @@
-package io.github.autyi6969.freecamplus;
+package io.github.autyism.freecamplus;
 
 import fi.dy.masa.tweakeroo.util.CameraEntity;
-import io.github.autyi6969.freecamplus.mixin.CameraEntityAccessor;
+import io.github.autyism.freecamplus.mixin.CameraEntityAccessor;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
@@ -113,12 +113,12 @@ public class FreecamPlus implements ClientModInitializer {
 		}
 		if (best != null) {
 			Markers.remove(best);
-			client.inGameHud.setOverlayMessage(Text.literal("已取消标记 " + best.number()), false);
+			client.inGameHud.setOverlayMessage(Text.translatable("freecamplus.marker.removed", best.number()), false);
 			return;
 		}
 
 		Markers.Marker marker = Markers.add(dimension, where);
-		client.inGameHud.setOverlayMessage(Text.literal("已打标记 " + marker.number() + "：" + where.getX() + ", " + where.getY() + ", " + where.getZ()), false);
+		client.inGameHud.setOverlayMessage(Text.translatable("freecamplus.marker.added", marker.number(), where.getX(), where.getY(), where.getZ()), false);
 	}
 
 	private static void renderWorld() {
@@ -152,13 +152,13 @@ public class FreecamPlus implements ClientModInitializer {
 		if (CameraEntity.getCamera() != null && SelfPointer.visible()) {
 			Vec3d body = client.player.getEyePos();
 			int distance = (int) Math.round(body.distanceTo(client.gameRenderer.getCamera().getCameraPos()));
-			drawArrow(context, client, body, SELF_COLOR, Text.literal("你  " + distance + "格"));
+			drawArrow(context, client, body, SELF_COLOR, Text.translatable("freecamplus.self", distance));
 		}
 		if (CameraEntity.getCamera() != null) {
 			boolean on = CameraEntityAccessor.freecamplus$isSprinting();
 			String factor = SprintSpeed.factor() == Math.floor(SprintSpeed.factor())
 					? String.valueOf((int) SprintSpeed.factor()) : String.valueOf(SprintSpeed.factor());
-			Text text = Text.literal("Sprint " + (on ? "ON" : "OFF") + "  x" + factor);
+			Text text = Text.translatable(on ? "freecamplus.sprint.on" : "freecamplus.sprint.off", factor);
 			int width = client.textRenderer.getWidth(text);
 			int x = (context.getScaledWindowWidth() - width) / 2;
 			context.drawTextWithShadow(client.textRenderer, text, x, 4, on ? 0xFF55FF55 : 0xFFAAAAAA);
@@ -176,8 +176,9 @@ public class FreecamPlus implements ClientModInitializer {
 			Vec3d spot = Vec3d.ofCenter(marker.pos());
 			int distance = (int) Math.round(spot.distanceTo(eye));
 			double height = spot.y - eye.y;
-			drawArrow(context, client, spot, COLOR, Text.literal("标记" + marker.number() + "  " + distance + "格"
-					+ (height > 3 ? "（上方）" : height < -3 ? "（下方）" : "")));
+			drawArrow(context, client, spot, COLOR, Text.translatable("freecamplus.marker.label", marker.number(), distance)
+					.append(height > 3 ? Text.translatable("freecamplus.marker.above")
+							: height < -3 ? Text.translatable("freecamplus.marker.below") : Text.empty()));
 		}
 	}
 

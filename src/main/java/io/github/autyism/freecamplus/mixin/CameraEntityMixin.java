@@ -1,10 +1,10 @@
-package io.github.autyi6969.freecamplus.mixin;
+package io.github.autyism.freecamplus.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import fi.dy.masa.tweakeroo.util.CameraEntity;
 import fi.dy.masa.tweakeroo.util.CameraPreset;
-import io.github.autyi6969.freecamplus.SelfPointer;
-import io.github.autyi6969.freecamplus.SprintSpeed;
+import io.github.autyism.freecamplus.SelfPointer;
+import io.github.autyism.freecamplus.SprintSpeed;
 import net.minecraft.client.MinecraftClient;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;

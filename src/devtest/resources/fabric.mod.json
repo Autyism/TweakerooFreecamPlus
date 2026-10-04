@@ -5,6 +5,6 @@
 	"name": "Freecam Plus dev test",
 	"environment": "client",
 	"entrypoints": {
-		"client": ["io.github.autyi6969.freecamplus.devtest.DevTest"]
+		"client": ["io.github.autyism.freecamplus.devtest.DevTest"]
 	}
 }

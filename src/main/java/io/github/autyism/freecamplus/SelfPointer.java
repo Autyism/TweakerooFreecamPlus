@@ -1,4 +1,4 @@
-package io.github.autyi6969.freecamplus;
+package io.github.autyism.freecamplus;
 
 import net.minecraft.util.Util;
 

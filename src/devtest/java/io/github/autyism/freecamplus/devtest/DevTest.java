@@ -1,4 +1,4 @@
-package io.github.autyi6969.freecamplus.devtest;
+package io.github.autyism.freecamplus.devtest;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -8,8 +8,8 @@ import java.util.function.Consumer;
 
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.util.CameraEntity;
-import io.github.autyi6969.freecamplus.Markers;
-import io.github.autyi6969.freecamplus.SprintSpeed;
+import io.github.autyism.freecamplus.Markers;
+import io.github.autyism.freecamplus.SprintSpeed;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
@@ -135,7 +135,7 @@ public class DevTest implements ClientModInitializer {
 		});
 		steps.add(new Step("hold Ctrl with key-repeats", (client, t) -> {
 			sprintKeyEvent(client, org.lwjgl.glfw.GLFW.GLFW_REPEAT);
-			if (t > 1 && !io.github.autyi6969.freecamplus.mixin.CameraEntityAccessor.freecamplus$isSprinting()) {
+			if (t > 1 && !io.github.autyism.freecamplus.mixin.CameraEntityAccessor.freecamplus$isSprinting()) {
 				flickered = true;
 			}
 			return t >= 15;
@@ -147,7 +147,7 @@ public class DevTest implements ClientModInitializer {
 		});
 		waitTicks(3);
 		check("sprint OFF after letting go (not moving)", (client, t) ->
-				!io.github.autyi6969.freecamplus.mixin.CameraEntityAccessor.freecamplus$isSprinting());
+				!io.github.autyism.freecamplus.mixin.CameraEntityAccessor.freecamplus$isSprinting());
 		check("body's toggle sprint unchanged by Ctrl in freecam", (client, t) -> client.options.sprintKey.isPressed() == bodyToggleBefore);
 	}
 
@@ -159,7 +159,7 @@ public class DevTest implements ClientModInitializer {
 				sprintKeyEvent(client, org.lwjgl.glfw.GLFW.GLFW_RELEASE);
 			}
 		});
-		check("two taps: no pointer", (client, t) -> !io.github.autyi6969.freecamplus.SelfPointer.visible());
+		check("two taps: no pointer", (client, t) -> !io.github.autyism.freecamplus.SelfPointer.visible());
 		waitTicks(20); // longer than the tap window
 		run("tap Ctrl three times", client -> {
 			for (int i = 0; i < 3; i++) {
@@ -167,7 +167,7 @@ public class DevTest implements ClientModInitializer {
 				sprintKeyEvent(client, org.lwjgl.glfw.GLFW.GLFW_RELEASE);
 			}
 		});
-		check("three taps: pointer to yourself shown", (client, t) -> io.github.autyi6969.freecamplus.SelfPointer.visible());
+		check("three taps: pointer to yourself shown", (client, t) -> io.github.autyism.freecamplus.SelfPointer.visible());
 		screenshot("06_self_pointer");
 	}
 

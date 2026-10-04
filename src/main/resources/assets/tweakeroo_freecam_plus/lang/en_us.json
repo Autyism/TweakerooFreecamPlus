@@ -1,0 +1,12 @@
+{
+	"freecamplus.marker.added": "Waypoint %s set: %s, %s, %s",
+	"freecamplus.marker.removed": "Waypoint %s removed",
+	"freecamplus.marker.label": "Waypoint %s  %s blocks",
+	"freecamplus.marker.above": " (above)",
+	"freecamplus.marker.below": " (below)",
+	"freecamplus.self": "You  %s blocks",
+	"freecamplus.sprint.on": "Sprint ON  x%s",
+	"freecamplus.sprint.off": "Sprint OFF  x%s",
+	"modmenu.nameTranslation.tweakeroo_freecam_plus": "Tweakeroo Freecam Plus",
+	"modmenu.descriptionTranslation.tweakeroo_freecam_plus": "Adds waypoints, an adjustable sprint speed and a pointer back to your character to Tweakeroo's free camera. Middle-click sets or removes a waypoint, Ctrl + mouse wheel changes the sprint speed, and a triple tap on Ctrl points at your character."
+}
