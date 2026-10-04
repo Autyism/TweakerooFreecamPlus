@@ -3,14 +3,22 @@
 	"id": "tweakeroo_freecam_plus",
 	"version": "${version}",
 	"name": "Tweakeroo Freecam Plus",
-	"description": "Personal add-on for Tweakeroo's Free Camera: middle click sets/removes waypoints, Ctrl + scroll changes the sprint speed.",
+	"description": "Adds waypoints, an adjustable sprint speed and a pointer back to your character to Tweakeroo's free camera. Middle-click sets or removes a waypoint, Ctrl + mouse wheel changes the sprint speed, and a triple tap on Ctrl points at your character.",
 	"authors": [
-		"Autyi6969"
+		"Autyism"
 	],
-	"license": "LGPL-3.0",
+	"contact": {
+		"homepage": "https://github.com/Autyism/TweakerooFreecamPlus",
+		"sources": "https://github.com/Autyism/TweakerooFreecamPlus",
+		"issues": "https://github.com/Autyism/TweakerooFreecamPlus/issues"
+	},
+	"license": "GPL-3.0-only",
+	"icon": "assets/tweakeroo_freecam_plus/icon.png",
 	"environment": "client",
 	"entrypoints": {
-		"client": ["io.github.autyi6969.freecamplus.FreecamPlus"]
+		"client": [
+			"io.github.autyism.freecamplus.FreecamPlus"
+		]
 	},
 	"mixins": [
 		"freecamplus.mixins.json"

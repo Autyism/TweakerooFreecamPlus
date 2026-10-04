@@ -1,4 +1,4 @@
-package io.github.autyi6969.freecamplus;
+package io.github.autyism.freecamplus;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

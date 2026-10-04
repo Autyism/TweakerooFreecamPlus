@@ -1,4 +1,4 @@
-package io.github.autyi6969.freecamplus.mixin;
+package io.github.autyism.freecamplus.mixin;
 
 import fi.dy.masa.tweakeroo.util.CameraEntity;
 import net.minecraft.client.MinecraftClient;

@@ -1,7 +1,7 @@
-package io.github.autyi6969.freecamplus.mixin;
+package io.github.autyism.freecamplus.mixin;
 
 import fi.dy.masa.tweakeroo.util.CameraEntity;
-import io.github.autyi6969.freecamplus.SprintSpeed;
+import io.github.autyism.freecamplus.SprintSpeed;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.Mouse;
 import org.spongepowered.asm.mixin.Final;

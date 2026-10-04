@@ -1,0 +1,12 @@
+{
+	"freecamplus.marker.added": "已打标记 %s：%s, %s, %s",
+	"freecamplus.marker.removed": "已取消标记 %s",
+	"freecamplus.marker.label": "标记%s  %s格",
+	"freecamplus.marker.above": "（上方）",
+	"freecamplus.marker.below": "（下方）",
+	"freecamplus.self": "你  %s格",
+	"freecamplus.sprint.on": "Sprint ON  x%s",
+	"freecamplus.sprint.off": "Sprint OFF  x%s",
+	"modmenu.nameTranslation.tweakeroo_freecam_plus": "Tweakeroo 灵魂出窍增强",
+	"modmenu.descriptionTranslation.tweakeroo_freecam_plus": "为 Tweakeroo 的灵魂出窍加入标记点、可调的疾跑速度和指回本体的箭头：中键打标记或取消标记，按住 Ctrl 滚动滚轮调节疾跑速度，连按三下 Ctrl 指向本体。"
+}
