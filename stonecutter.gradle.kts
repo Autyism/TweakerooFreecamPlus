@@ -16,4 +16,15 @@ stonecutter parameters {
             replacements.regex(condition) { replace(from, to, never, to) }
         }
     }
+
+    // 26.1: GUI drawing renamed (same arguments). These calls only ever go to GuiGraphics in this code.
+    oneWay(current.parsed >= "26.1",
+        "\\bGuiGraphics\\b" to "GuiGraphicsExtractor",
+        "\\.drawString\\(" to ".text(",
+    )
+    // 26.1: Fabric API renames
+    oneWay(current.parsed >= "26.1",
+        "\\bkeybinding\\.v1\\.KeyBindingHelper\\b" to "keymapping.v1.KeyMappingHelper",
+        "\\bKeyBindingHelper\\.getBoundKeyOf\\(" to "KeyMappingHelper.getBoundKeyOf(",
+    )
 }

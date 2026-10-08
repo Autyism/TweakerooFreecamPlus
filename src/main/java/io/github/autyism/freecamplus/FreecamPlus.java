@@ -6,6 +6,9 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
+//? if >=26.1 {
+/*import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderEvents;
+*///?} else
 import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderEvents;
 import net.minecraft.client.Camera;
 import net.minecraft.client.DeltaTracker;
@@ -50,6 +53,9 @@ public class FreecamPlus implements ClientModInitializer {
 	public void onInitializeClient() {
 		ClientTickEvents.START_CLIENT_TICK.register(FreecamPlus::onStartTick);
 		ClientTickEvents.END_CLIENT_TICK.register(FreecamPlus::onEndTick);
+		//? if >=26.1 {
+		/*LevelRenderEvents.BEFORE_GIZMOS.register(context -> renderWorld());
+		*///?} else
 		WorldRenderEvents.BEFORE_DEBUG_RENDER.register(context -> renderWorld());
 		HudElementRegistry.attachElementBefore(VanillaHudElements.CHAT, Identifier.fromNamespaceAndPath(MOD_ID, "hud"), FreecamPlus::renderHud);
 	}
