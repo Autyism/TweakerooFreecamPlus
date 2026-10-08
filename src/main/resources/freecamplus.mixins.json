@@ -7,7 +7,7 @@
 		"CameraEntityMixin",
 		"KeyboardMixin",
 		"MouseMixin",
-		"StickyKeyBindingMixin"
+		"StickyKeyBindingMixin"${extra_mixins}
 	],
 	"injectors": {
 		"defaultRequire": 1
