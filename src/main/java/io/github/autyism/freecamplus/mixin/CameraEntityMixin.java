@@ -5,7 +5,7 @@ import fi.dy.masa.tweakeroo.util.CameraEntity;
 import fi.dy.masa.tweakeroo.util.CameraPreset;
 import io.github.autyism.freecamplus.SelfPointer;
 import io.github.autyism.freecamplus.SprintSpeed;
-import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.Minecraft;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Constant;
@@ -27,9 +27,9 @@ public class CameraEntityMixin {
 	 * while Ctrl is held, and (Tweakeroo's own rule) it stays on until you stop moving forward.
 	 */
 	@ModifyExpressionValue(method = "movementTick", remap = false, at = @At(value = "INVOKE",
-			target = "Lnet/minecraft/client/option/KeyBinding;isPressed()Z", ordinal = 0, remap = true))
+			target = "Lnet/minecraft/client/KeyMapping;isDown()Z", ordinal = 0, remap = true))
 	private static boolean freecamplus$physicalSprint(boolean original) {
-		return SprintSpeed.sprintKeyHeld(MinecraftClient.getInstance());
+		return SprintSpeed.sprintKeyHeld(Minecraft.getInstance());
 	}
 
 	/** Every time the free camera is switched on it starts at the normal speed (x3). */

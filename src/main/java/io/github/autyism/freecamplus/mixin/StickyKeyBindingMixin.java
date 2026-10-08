@@ -1,8 +1,8 @@
 package io.github.autyism.freecamplus.mixin;
 
 import fi.dy.masa.tweakeroo.util.CameraEntity;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.option.StickyKeyBinding;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.ToggleKeyMapping;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -13,13 +13,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  * sprint toggle. In the free camera Ctrl is used a lot (speed, triple tap), so the body's toggle is
  * frozen there and is exactly as before when you leave the free camera.
  */
-@Mixin(StickyKeyBinding.class)
+@Mixin(ToggleKeyMapping.class)
 public class StickyKeyBindingMixin {
-	@Inject(method = "setPressed", at = @At("HEAD"), cancellable = true)
+	@Inject(method = "setDown", at = @At("HEAD"), cancellable = true)
 	private void freecamplus$freezeSprintToggle(boolean pressed, CallbackInfo ci) {
-		MinecraftClient client = MinecraftClient.getInstance();
+		Minecraft client = Minecraft.getInstance();
 		if (pressed && CameraEntity.getCamera() != null && client.options != null
-				&& (Object) this == client.options.sprintKey && client.options.getSprintToggled().getValue()) {
+				&& (Object) this == client.options.keySprint && client.options.toggleSprint().get()) {
 			ci.cancel();
 		}
 	}

@@ -7,10 +7,10 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ServerInfo;
-import net.minecraft.util.WorldSavePath;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ServerData;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.storage.LevelResource;
 import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
@@ -50,7 +50,7 @@ public final class Markers {
 		while (LIST.size() >= MAX) {
 			LIST.remove(0); // the oldest makes room
 		}
-		Marker marker = new Marker(nextNumber++, dimension, pos.toImmutable());
+		Marker marker = new Marker(nextNumber++, dimension, pos.immutable());
 		LIST.add(marker);
 		save();
 		return marker;
@@ -64,14 +64,14 @@ public final class Markers {
 
 	/** Removes the markers of this dimension within 3 blocks of the player; called every tick. */
 	public static void removeArrived(String dimension, BlockPos player) {
-		if (LIST.removeIf(marker -> marker.dimension.equals(dimension) && marker.pos.getSquaredDistance(player) <= 3 * 3)) {
+		if (LIST.removeIf(marker -> marker.dimension.equals(dimension) && marker.pos.distSqr(player) <= 3 * 3)) {
 			save();
 		}
 	}
 
 	/** Loads the markers of the world the client is in now (only does work when the world changed). */
-	public static void sync(MinecraftClient client) {
-		String id = client.world == null ? null : computeId(client);
+	public static void sync(Minecraft client) {
+		String id = client.level == null ? null : computeId(client);
 		if (Objects.equals(id, worldId)) {
 			return;
 		}
@@ -130,14 +130,14 @@ public final class Markers {
 		return FabricLoader.getInstance().getConfigDir().resolve(FreecamPlus.MOD_ID).resolve("worlds").resolve(id + ".json");
 	}
 
-	private static String computeId(MinecraftClient client) {
+	private static String computeId(Minecraft client) {
 		String raw;
-		if (client.isIntegratedServerRunning() && client.getServer() != null) {
-			Path folder = client.getServer().getSavePath(WorldSavePath.ROOT).toAbsolutePath().normalize();
+		if (client.hasSingleplayerServer() && client.getSingleplayerServer() != null) {
+			Path folder = client.getSingleplayerServer().getWorldPath(LevelResource.ROOT).toAbsolutePath().normalize();
 			raw = "local_" + folder.getFileName();
 		} else {
-			ServerInfo server = client.getCurrentServerEntry();
-			raw = "server_" + (server != null ? server.address : "unknown");
+			ServerData server = client.getCurrentServer();
+			raw = "server_" + (server != null ? server.ip : "unknown");
 		}
 		return raw.replaceAll("[^A-Za-z0-9._-]", "_");
 	}
