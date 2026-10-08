@@ -38,4 +38,12 @@ stonecutter parameters {
         "\\.getMainCamera\\(\\)" to ".mainCamera()",
         "\\bclient\\.getMainRenderTarget\\(\\)" to "client.gameRenderer.mainRenderTarget()",
     )
+    // 26.3: input goes through SDL. Keyboard keys are a key type of their own (SDL scancodes) and there is no
+    // GLFW; InputConstants names key presses, releases and repeats on every version.
+    oneWay(current.parsed >= "26.3",
+        "\\bInputConstants\\.Type\\.KEYSYM\\b" to "InputConstants.Type.KEYBOARD",
+        "(?<![.\\w])GLFW\\.GLFW_PRESS\\b" to "InputConstants.PRESS",
+        // dev test only
+        "\\borg\\.lwjgl\\.glfw\\.GLFW\\.GLFW_(PRESS|RELEASE|REPEAT)\\b" to "com.mojang.blaze3d.platform.InputConstants.$1",
+    )
 }

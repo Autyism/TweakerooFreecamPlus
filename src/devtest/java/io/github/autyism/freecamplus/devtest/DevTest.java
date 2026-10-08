@@ -44,6 +44,7 @@ public class DevTest implements ClientModInitializer {
 	private double speedDefault;
 	private int slotBefore;
 	private int markersBefore;
+	private com.mojang.blaze3d.platform.InputConstants.Key sprintKeyBefore;
 
 	@Override
 	public void onInitializeClient() {
@@ -204,6 +205,18 @@ public class DevTest implements ClientModInitializer {
 		waitTicks(5);
 		check("free camera exists", (client, t) -> CameraEntity.getCamera() != null);
 		check("default sprint factor is 3", (client, t) -> SprintSpeed.factor() == 3.0);
+		// The real key check (GLFW, or SDL on 26.3+) for a key and for a mouse button nobody holds.
+		check("sprint key read as not held", (client, t) -> !SprintSpeed.sprintKeyHeld(client));
+		run("sprint on an extra mouse button", client -> {
+			sprintKeyBefore = KeyBindingHelper.getBoundKeyOf(client.options.keySprint);
+			client.options.keySprint.setKey(com.mojang.blaze3d.platform.InputConstants.Type.MOUSE.getOrCreate(4));
+			KeyMapping.resetMapping();
+		});
+		check("mouse button read as not held", (client, t) -> !SprintSpeed.sprintKeyHeld(client));
+		run("sprint back on its key", client -> {
+			client.options.keySprint.setKey(sprintKeyBefore);
+			KeyMapping.resetMapping();
+		});
 		screenshot("01_freecam_sprint_off");
 
 		// default sprint speed
