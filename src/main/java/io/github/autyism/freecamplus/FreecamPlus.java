@@ -8,8 +8,9 @@ import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
 //? if >=26.1 {
 /*import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderEvents;
-*///?} else
+*///?} elif >=1.21.11 {
 import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderEvents;
+//?}
 import net.minecraft.client.Camera;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
@@ -55,8 +56,10 @@ public class FreecamPlus implements ClientModInitializer {
 		ClientTickEvents.END_CLIENT_TICK.register(FreecamPlus::onEndTick);
 		//? if >=26.1 {
 		/*LevelRenderEvents.BEFORE_GIZMOS.register(context -> renderWorld());
-		*///?} else
+		*///?} elif >=1.21.11 {
 		WorldRenderEvents.BEFORE_DEBUG_RENDER.register(context -> renderWorld());
+		//?}
+		// (before 1.21.11 the mod's own hook calls renderWorld(), see mixin.LegacyDebugRendererMixin)
 		HudElementRegistry.attachElementBefore(VanillaHudElements.CHAT, Identifier.fromNamespaceAndPath(MOD_ID, "hud"), FreecamPlus::renderHud);
 	}
 
@@ -127,6 +130,9 @@ public class FreecamPlus implements ClientModInitializer {
 		client.gui.setOverlayMessage(Component.translatable("freecamplus.marker.added", marker.number(), where.getX(), where.getY(), where.getZ()), false);
 	}
 
+	//? if <1.21.11 {
+	/*public static void renderWorld() {
+	*///?} else
 	private static void renderWorld() {
 		Minecraft client = Minecraft.getInstance();
 		if (client.level == null) {
