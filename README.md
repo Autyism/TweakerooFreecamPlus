@@ -5,7 +5,7 @@
 
 <p align="center"><a href="#english">English</a> · <a href="#简体中文">简体中文</a></p>
 
-![Minecraft 1.21.11 | 26.1–26.3](https://img.shields.io/badge/Minecraft-1.21.11_%7C_26.1--26.3-62B47A) ![Fabric](https://img.shields.io/badge/Loader-Fabric-DBD0B4) ![Tweakeroo add-on](https://img.shields.io/badge/Tweakeroo-add--on-E5A54B) ![License: GPL-3.0](https://img.shields.io/badge/License-GPL--3.0-blue)
+![Minecraft 1.21.9–1.21.11 | 26.1–26.3](https://img.shields.io/badge/Minecraft-1.21.9--1.21.11_%7C_26.1--26.3-62B47A) ![Fabric](https://img.shields.io/badge/Loader-Fabric-DBD0B4) ![Tweakeroo add-on](https://img.shields.io/badge/Tweakeroo-add--on-E5A54B) ![License: GPL-3.0](https://img.shields.io/badge/License-GPL--3.0-blue)
 
 # English
 
@@ -133,6 +133,7 @@ Each Minecraft version has its own jar, and each jar works with exactly one Twea
 
 | Minecraft | Jar | [Tweakeroo](https://modrinth.com/mod/tweakeroo) | [MaLiLib](https://modrinth.com/mod/malilib) | Java |
 |---|---|---|---|---|
+| 1.21.9, 1.21.10 | `tweakeroo-freecam-plus-1.0.0+1.21.10.jar` | 0.26.5 | 0.26.4 or newer within 0.26.x | 21 |
 | 1.21.11 | `tweakeroo-freecam-plus-1.0.0.jar` | 0.27.15 | 0.27.19 or newer within 0.27.x | 21 |
 | 26.1, 26.1.1, 26.1.2 | `tweakeroo-freecam-plus-1.0.0+26.1.2.jar` | 0.28.10 | 0.28.11 or newer within 0.28.x | 25 |
 | 26.2 | `tweakeroo-freecam-plus-1.0.0+26.2.jar` | 0.29.5 | 0.29.5 or newer within 0.29.x | 25 |
@@ -329,6 +330,7 @@ Tweakeroo Freecam Plus is licensed under the GNU General Public License v3.0 (GP
 
 | Minecraft | jar | [Tweakeroo](https://modrinth.com/mod/tweakeroo) | [MaLiLib](https://modrinth.com/mod/malilib) | Java |
 |---|---|---|---|---|
+| 1.21.9、1.21.10 | `tweakeroo-freecam-plus-1.0.0+1.21.10.jar` | 0.26.5 | 0.26.4 及以上的 0.26.x | 21 |
 | 1.21.11 | `tweakeroo-freecam-plus-1.0.0.jar` | 0.27.15 | 0.27.19 及以上的 0.27.x | 21 |
 | 26.1、26.1.1、26.1.2 | `tweakeroo-freecam-plus-1.0.0+26.1.2.jar` | 0.28.10 | 0.28.11 及以上的 0.28.x | 25 |
 | 26.2 | `tweakeroo-freecam-plus-1.0.0+26.2.jar` | 0.29.5 | 0.29.5 及以上的 0.29.x | 25 |
