@@ -17,6 +17,18 @@ stonecutter parameters {
         }
     }
 
+    // Before 1.21.11: no gizmos (the mod brings the calls it uses, package render.legacy), no jspecify, and some
+    // classes and getters had other names.
+    oneWay(current.parsed < "1.21.11",
+        "\\bnet\\.minecraft\\.gizmos\\." to "io.github.autyism.freecamplus.render.legacy.",
+        "\\borg\\.jspecify\\.annotations\\.Nullable\\b" to "org.jetbrains.annotations.Nullable",
+        "\\bimport net\\.minecraft\\.util\\.Util;" to "import net.minecraft.Util;",
+        "\\bIdentifier\\b" to "ResourceLocation",
+        "\\.dimension\\(\\)\\.identifier\\(\\)" to ".dimension().location()",
+        "(\\.|float )yRot\\(\\)" to "$1getYRot()",
+        "(\\.|float )xRot\\(\\)" to "$1getXRot()",
+    )
+
     // 26.1: GUI drawing renamed (same arguments). These calls only ever go to GuiGraphics in this code.
     oneWay(current.parsed >= "26.1",
         "\\bGuiGraphics\\b" to "GuiGraphicsExtractor",
