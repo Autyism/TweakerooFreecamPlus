@@ -23,3 +23,12 @@ mod.tweakeroo_compat = "0.28.10"
 deps.fabric_api = "0.155.3+26.1.2"
 deps.tweakeroo = "0.28.10"
 deps.malilib = "0.28.12"
+
+["26.2"]
+mod.mc_compat = "~26.2"
+mod.loader_compat = ">=0.19.3"
+mod.java_compat = ">=25"
+mod.tweakeroo_compat = "0.29.5"
+deps.fabric_api = "0.161.0+26.2"
+deps.tweakeroo = "0.29.5"
+deps.malilib = "0.29.6"

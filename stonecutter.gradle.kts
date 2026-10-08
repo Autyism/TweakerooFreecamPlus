@@ -27,4 +27,15 @@ stonecutter parameters {
         "\\bkeybinding\\.v1\\.KeyBindingHelper\\b" to "keymapping.v1.KeyMappingHelper",
         "\\bKeyBindingHelper\\.getBoundKeyOf\\(" to "KeyMappingHelper.getBoundKeyOf(",
     )
+    // 26.2: the open screen moved from Minecraft to Gui, on-screen messages and "hide GUI" to Gui's Hud,
+    // and the camera and main render target have shorter getters. "client" and "minecraft" are always
+    // a Minecraft in this code.
+    oneWay(current.parsed >= "26.2",
+        "(?<![.\\w])(client|minecraft)\\.screen\\b" to "$1.gui.screen()",
+        "(?<![.\\w])client\\.setScreen\\(" to "client.gui.setScreen(",
+        "\\bclient\\.gui\\.setOverlayMessage\\(" to "client.gui.hud.setOverlayMessage(",
+        "\\bclient\\.options\\.hideGui\\b" to "client.gui.hud.isHidden()",
+        "\\.getMainCamera\\(\\)" to ".mainCamera()",
+        "\\bclient\\.getMainRenderTarget\\(\\)" to "client.gameRenderer.mainRenderTarget()",
+    )
 }
