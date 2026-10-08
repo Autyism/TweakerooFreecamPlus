@@ -1,4 +1,4 @@
-<p align="center"><img src="docs/icon.png" width="128" alt="icon"></p>
+<p align="center"><img src="docs/icon_transparent.png" width="140" alt="icon"></p>
 <h1 align="center">Tweakeroo Freecam Plus</h1>
 <p align="center">Waypoints, adjustable sprint speed and a pointer back to your character for Tweakeroo's free camera.</p>
 <p align="center">为 Tweakeroo 的灵魂出窍加上标记点、可调的疾跑速度，以及指回本体的箭头。</p>
