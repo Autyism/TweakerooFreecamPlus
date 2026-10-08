@@ -14,7 +14,9 @@ public class DevTestGameTest implements FabricClientGameTest {
 	@Override
 	public void runTest(ClientGameTestContext context) {
 		try (TestSingleplayerContext singleplayer = context.worldBuilder().create()) {
-			//? if >=26.1 {
+			//? if >=26.2 {
+			/*singleplayer.getConnection().waitForChunksRender();
+			*///?} elif >=26.1 {
 			/*singleplayer.getClientLevel().waitForChunksRender();
 			*///?} else
 			singleplayer.getClientWorld().waitForChunksRender();
