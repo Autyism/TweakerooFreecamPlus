@@ -3,6 +3,10 @@ package io.github.autyism.freecamplus;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.Minecraft;
+//? if >=26.3 {
+/*import org.lwjgl.sdl.SDLMouse;
+import org.lwjgl.system.MemoryStack;
+*///?} else
 import org.lwjgl.glfw.GLFW;
 
 /**
@@ -38,12 +42,30 @@ public final class SprintSpeed {
 			return testSprintHeld;
 		}
 		InputConstants.Key key = KeyBindingHelper.getBoundKeyOf(client.options.keySprint);
+		//? if >=26.3 {
+		/*// 26.3+ reads input through SDL: keyboard keys are SDL scancodes, mouse buttons count from 1.
+		if (key.getType() == InputConstants.Type.MOUSE) {
+			return isMouseButtonDown(key.getValue());
+		}
+		return key.getValue() != InputConstants.UNKNOWN.getValue() && InputConstants.isKeyDown(key.getValue());
+		*///?} else {
 		long window = client.getWindow().handle();
 		if (key.getType() == InputConstants.Type.MOUSE) {
 			return GLFW.glfwGetMouseButton(window, key.getValue()) == GLFW.GLFW_PRESS;
 		}
 		return key.getValue() != InputConstants.UNKNOWN.getValue() && GLFW.glfwGetKey(window, key.getValue()) == GLFW.GLFW_PRESS;
+		//?}
 	}
+
+	//? if >=26.3 {
+	/*/^* Whether a mouse button (numbered from 1, as SDL does) is held. ^/
+	private static boolean isMouseButtonDown(int button) {
+		try (MemoryStack stack = MemoryStack.stackPush()) {
+			int buttons = SDLMouse.SDL_GetMouseState(stack.mallocFloat(1), stack.mallocFloat(1));
+			return button > 0 && button <= 32 && (buttons & 1 << button - 1) != 0;
+		}
+	}
+	*///?}
 
 	/** For the test only. */
 	public static void reset() {
