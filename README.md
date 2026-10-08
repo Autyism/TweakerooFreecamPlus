@@ -5,7 +5,7 @@
 
 <p align="center"><a href="#english">English</a> · <a href="#简体中文">简体中文</a></p>
 
-![Minecraft 1.21.11 | 26.1–26.2](https://img.shields.io/badge/Minecraft-1.21.11_%7C_26.1--26.2-62B47A) ![Fabric](https://img.shields.io/badge/Loader-Fabric-DBD0B4) ![Tweakeroo add-on](https://img.shields.io/badge/Tweakeroo-add--on-E5A54B) ![License: GPL-3.0](https://img.shields.io/badge/License-GPL--3.0-blue)
+![Minecraft 1.21.11 | 26.1–26.3](https://img.shields.io/badge/Minecraft-1.21.11_%7C_26.1--26.3-62B47A) ![Fabric](https://img.shields.io/badge/Loader-Fabric-DBD0B4) ![Tweakeroo add-on](https://img.shields.io/badge/Tweakeroo-add--on-E5A54B) ![License: GPL-3.0](https://img.shields.io/badge/License-GPL--3.0-blue)
 
 # English
 
@@ -136,6 +136,7 @@ Each Minecraft version has its own jar, and each jar works with exactly one Twea
 | 1.21.11 | `tweakeroo-freecam-plus-1.0.0.jar` | 0.27.15 | 0.27.19 or newer within 0.27.x | 21 |
 | 26.1, 26.1.1, 26.1.2 | `tweakeroo-freecam-plus-1.0.0+26.1.2.jar` | 0.28.10 | 0.28.11 or newer within 0.28.x | 25 |
 | 26.2 | `tweakeroo-freecam-plus-1.0.0+26.2.jar` | 0.29.5 | 0.29.5 or newer within 0.29.x | 25 |
+| 26.3 | `tweakeroo-freecam-plus-1.0.0+26.3.jar` | 0.30.1 | 0.30.2 or newer within 0.30.x | 25 |
 
 You also need [Fabric Loader](https://fabricmc.net/use/) (0.17.0 or newer; 0.19.3 or newer on 26.x) and [Fabric API](https://modrinth.com/mod/fabric-api) for your Minecraft version.
 
@@ -331,6 +332,7 @@ Tweakeroo Freecam Plus is licensed under the GNU General Public License v3.0 (GP
 | 1.21.11 | `tweakeroo-freecam-plus-1.0.0.jar` | 0.27.15 | 0.27.19 及以上的 0.27.x | 21 |
 | 26.1、26.1.1、26.1.2 | `tweakeroo-freecam-plus-1.0.0+26.1.2.jar` | 0.28.10 | 0.28.11 及以上的 0.28.x | 25 |
 | 26.2 | `tweakeroo-freecam-plus-1.0.0+26.2.jar` | 0.29.5 | 0.29.5 及以上的 0.29.x | 25 |
+| 26.3 | `tweakeroo-freecam-plus-1.0.0+26.3.jar` | 0.30.1 | 0.30.2 及以上的 0.30.x | 25 |
 
 另外还需要对应你 Minecraft 版本的 [Fabric Loader](https://fabricmc.net/use/)（0.17.0 或更高；26.x 要 0.19.3 或更高）和 [Fabric API](https://modrinth.com/mod/fabric-api)。
 
