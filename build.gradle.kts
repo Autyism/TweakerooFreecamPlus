@@ -117,11 +117,13 @@ tasks.named("runClientGameTest") {
     doFirst { delete(layout.buildDirectory.dir("run/clientGameTest")) }
 }
 
-// The dev test as a jar of its own, for a throwaway copy of a real game folder. Up to 1.21.11 it is
-// translated to the names the real game uses, the same step Loom does for the release jar.
+// The dev test as a jar of its own (build/devtest/), for a game folder of its own, e.g. a throwaway copy of a
+// real one. Up to 1.21.11 it is translated to the names the real game uses, the same step Loom does for the
+// release jar (gradlew :<version>:remapDevtestJar); on 26.1+ gradlew :<version>:devtestJar.
 val devtestJar = tasks.register<Jar>("devtestJar") {
     from(devtest.output)
     archiveBaseName.set("freecamplus-devtest")
+    destinationDirectory.set(layout.buildDirectory.dir("devtest"))
     if (!loomx.isUnobfuscated) {
         archiveClassifier.set("dev")
         destinationDirectory.set(layout.buildDirectory.dir("devlibs"))
@@ -131,6 +133,7 @@ if (!loomx.isUnobfuscated) {
     tasks.register<net.fabricmc.loom.task.RemapJarTask>("remapDevtestJar") {
         inputFile.set(devtestJar.flatMap { it.archiveFile })
         archiveBaseName.set("freecamplus-devtest")
+        destinationDirectory.set(layout.buildDirectory.dir("devtest"))
         addNestedDependencies.set(false)
         classpath.from(devtest.compileClasspath)
     }

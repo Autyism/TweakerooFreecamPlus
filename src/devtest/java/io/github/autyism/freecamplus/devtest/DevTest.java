@@ -104,9 +104,17 @@ public class DevTest implements ClientModInitializer {
 		}));
 	}
 
+	/** A game method's name at run time: its own name on 26.1+ (not obfuscated), else mapped from intermediary. */
+	private static String gameMethod(String owner, String intermediary, String descriptor, String name) {
+		//? if >=26.1 {
+		/*return name;
+		*///?} else
+		return net.fabricmc.loader.api.FabricLoader.getInstance().getMappingResolver().mapMethodName("intermediary", owner, intermediary, descriptor);
+	}
+
 	private static void scroll(Minecraft client, double amount) {
 		try {
-			Method method = MouseHandler.class.getDeclaredMethod(net.fabricmc.loader.api.FabricLoader.getInstance().getMappingResolver().mapMethodName("intermediary", "net.minecraft.class_312", "method_1598", "(JDD)V"), long.class, double.class, double.class);
+			Method method = MouseHandler.class.getDeclaredMethod(gameMethod("net.minecraft.class_312", "method_1598", "(JDD)V", "onScroll"), long.class, double.class, double.class);
 			method.setAccessible(true);
 			method.invoke(client.mouseHandler, client.getWindow().handle(), 0.0, amount);
 		} catch (ReflectiveOperationException e) {
@@ -117,9 +125,8 @@ public class DevTest implements ClientModInitializer {
 	/** A real keyboard event for the sprint key, through the game's own key handler. */
 	private static void sprintKeyEvent(Minecraft client, int action) {
 		try {
-			var resolver = net.fabricmc.loader.api.FabricLoader.getInstance().getMappingResolver();
 			Method method = net.minecraft.client.KeyboardHandler.class.getDeclaredMethod(
-					resolver.mapMethodName("intermediary", "net.minecraft.class_309", "method_1466", "(JILnet/minecraft/class_11908;)V"),
+					gameMethod("net.minecraft.class_309", "method_1466", "(JILnet/minecraft/class_11908;)V", "keyPress"),
 					long.class, int.class, net.minecraft.client.input.KeyEvent.class);
 			method.setAccessible(true);
 			int code = KeyBindingHelper.getBoundKeyOf(client.options.keySprint).getValue();

@@ -14,3 +14,12 @@ mod.tweakeroo_compat = "0.27.15"
 deps.fabric_api = "0.141.6+1.21.11"
 deps.tweakeroo = "0.27.15"
 deps.malilib = "0.27.20"
+
+["26.1.2"]
+mod.mc_compat = ">=26.1 <=26.1.2"
+mod.loader_compat = ">=0.19.3"
+mod.java_compat = ">=25"
+mod.tweakeroo_compat = "0.28.10"
+deps.fabric_api = "0.155.3+26.1.2"
+deps.tweakeroo = "0.28.10"
+deps.malilib = "0.28.12"
