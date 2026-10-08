@@ -5,6 +5,7 @@
 	"name": "Freecam Plus dev test",
 	"environment": "client",
 	"entrypoints": {
-		"client": ["io.github.autyism.freecamplus.devtest.DevTest"]
+		"client": ["io.github.autyism.freecamplus.devtest.DevTest"],
+		"fabric-client-gametest": ["io.github.autyism.freecamplus.devtest.DevTestGameTest"]
 	}
 }

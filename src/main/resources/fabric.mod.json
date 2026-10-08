@@ -24,10 +24,10 @@
 		"freecamplus.mixins.json"
 	],
 	"depends": {
-		"fabricloader": ">=0.17.0",
-		"minecraft": "1.21.11",
-		"java": ">=21",
+		"fabricloader": "${loader_compat}",
+		"minecraft": "${minecraft_version}",
+		"java": "${java_compat}",
 		"fabric-api": "*",
-		"tweakeroo": "0.27.15"
+		"tweakeroo": "${tweakeroo_compat}"
 	}
 }
