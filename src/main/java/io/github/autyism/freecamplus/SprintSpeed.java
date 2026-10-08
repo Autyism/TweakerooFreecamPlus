@@ -1,8 +1,8 @@
 package io.github.autyism.freecamplus;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.util.InputUtil;
+import net.minecraft.client.Minecraft;
 import org.lwjgl.glfw.GLFW;
 
 /**
@@ -33,16 +33,16 @@ public final class SprintSpeed {
 	 * Whether the sprint key is physically held down right now. Not {@code sprintKey.isPressed()}:
 	 * with "Toggle Sprint" on, that stays true after the key is let go.
 	 */
-	public static boolean sprintKeyHeld(MinecraftClient client) {
+	public static boolean sprintKeyHeld(Minecraft client) {
 		if (testSprintHeld != null) {
 			return testSprintHeld;
 		}
-		InputUtil.Key key = KeyBindingHelper.getBoundKeyOf(client.options.sprintKey);
-		long window = client.getWindow().getHandle();
-		if (key.getCategory() == InputUtil.Type.MOUSE) {
-			return GLFW.glfwGetMouseButton(window, key.getCode()) == GLFW.GLFW_PRESS;
+		InputConstants.Key key = KeyBindingHelper.getBoundKeyOf(client.options.keySprint);
+		long window = client.getWindow().handle();
+		if (key.getType() == InputConstants.Type.MOUSE) {
+			return GLFW.glfwGetMouseButton(window, key.getValue()) == GLFW.GLFW_PRESS;
 		}
-		return key.getCode() != InputUtil.UNKNOWN_KEY.getCode() && GLFW.glfwGetKey(window, key.getCode()) == GLFW.GLFW_PRESS;
+		return key.getValue() != InputConstants.UNKNOWN.getValue() && GLFW.glfwGetKey(window, key.getValue()) == GLFW.GLFW_PRESS;
 	}
 
 	/** For the test only. */

@@ -15,7 +15,7 @@ public final class SelfPointer {
 	}
 
 	public static void tap() {
-		long now = Util.getMeasuringTimeMs();
+		long now = Util.getMillis();
 		taps[tapCount % 3] = now;
 		tapCount++;
 		long oldest = taps[tapCount % 3]; // the third-last tap
@@ -26,7 +26,7 @@ public final class SelfPointer {
 	}
 
 	public static boolean visible() {
-		return Util.getMeasuringTimeMs() < visibleUntil;
+		return Util.getMillis() < visibleUntil;
 	}
 
 	public static void hide() {

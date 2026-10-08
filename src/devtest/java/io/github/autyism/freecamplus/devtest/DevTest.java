@@ -13,11 +13,11 @@ import io.github.autyism.freecamplus.SprintSpeed;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.Mouse;
-import net.minecraft.client.option.KeyBinding;
-import net.minecraft.client.util.ScreenshotRecorder;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.client.KeyMapping;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.MouseHandler;
+import net.minecraft.client.Screenshot;
+import net.minecraft.world.phys.Vec3;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,14 +25,14 @@ import org.slf4j.LoggerFactory;
 public class DevTest implements ClientModInitializer {
 	private static final Logger LOG = LoggerFactory.getLogger("DevTest");
 
-	private record Step(String name, BiPredicate<MinecraftClient, Integer> action) {
+	private record Step(String name, BiPredicate<Minecraft, Integer> action) {
 	}
 
 	private final List<Step> steps = new ArrayList<>();
 	private int index;
 	private int ticks;
 	private int failures;
-	private Vec3d before = Vec3d.ZERO;
+	private Vec3 before = Vec3.ZERO;
 	private double speedDefault;
 	private int slotBefore;
 	private int markersBefore;
@@ -40,11 +40,11 @@ public class DevTest implements ClientModInitializer {
 	@Override
 	public void onInitializeClient() {
 		build();
-		new java.io.File(MinecraftClient.getInstance().runDirectory, "screenshots/devtest").mkdirs();
+		new java.io.File(Minecraft.getInstance().gameDirectory, "screenshots/devtest").mkdirs();
 		ClientTickEvents.END_CLIENT_TICK.register(this::tick);
 	}
 
-	private void tick(MinecraftClient client) {
+	private void tick(Minecraft client) {
 		if (index >= steps.size()) {
 			return;
 		}
@@ -64,7 +64,7 @@ public class DevTest implements ClientModInitializer {
 		}
 	}
 
-	private void run(String name, Consumer<MinecraftClient> action) {
+	private void run(String name, Consumer<Minecraft> action) {
 		steps.add(new Step(name, (client, t) -> {
 			action.accept(client);
 			return true;
@@ -75,7 +75,7 @@ public class DevTest implements ClientModInitializer {
 		steps.add(new Step("wait " + count, (client, t) -> t >= count));
 	}
 
-	private void check(String name, BiPredicate<MinecraftClient, Integer> condition) {
+	private void check(String name, BiPredicate<Minecraft, Integer> condition) {
 		run(name, client -> {
 			boolean ok = condition.test(client, 0);
 			if (!ok) {
@@ -90,32 +90,32 @@ public class DevTest implements ClientModInitializer {
 			if (t < 6) {
 				return false;
 			}
-			ScreenshotRecorder.saveScreenshot(client.runDirectory, "devtest/" + name + ".png", client.getFramebuffer(), 1,
+			Screenshot.grab(client.gameDirectory, "devtest/" + name + ".png", client.getMainRenderTarget(), 1,
 					message -> LOG.info("[DevTest] screenshot {}", name));
 			return true;
 		}));
 	}
 
-	private static void scroll(MinecraftClient client, double amount) {
+	private static void scroll(Minecraft client, double amount) {
 		try {
-			Method method = Mouse.class.getDeclaredMethod(net.fabricmc.loader.api.FabricLoader.getInstance().getMappingResolver().mapMethodName("intermediary", "net.minecraft.class_312", "method_1598", "(JDD)V"), long.class, double.class, double.class);
+			Method method = MouseHandler.class.getDeclaredMethod(net.fabricmc.loader.api.FabricLoader.getInstance().getMappingResolver().mapMethodName("intermediary", "net.minecraft.class_312", "method_1598", "(JDD)V"), long.class, double.class, double.class);
 			method.setAccessible(true);
-			method.invoke(client.mouse, client.getWindow().getHandle(), 0.0, amount);
+			method.invoke(client.mouseHandler, client.getWindow().handle(), 0.0, amount);
 		} catch (ReflectiveOperationException e) {
 			throw new RuntimeException(e);
 		}
 	}
 
 	/** A real keyboard event for the sprint key, through the game's own key handler. */
-	private static void sprintKeyEvent(MinecraftClient client, int action) {
+	private static void sprintKeyEvent(Minecraft client, int action) {
 		try {
 			var resolver = net.fabricmc.loader.api.FabricLoader.getInstance().getMappingResolver();
-			Method method = net.minecraft.client.Keyboard.class.getDeclaredMethod(
+			Method method = net.minecraft.client.KeyboardHandler.class.getDeclaredMethod(
 					resolver.mapMethodName("intermediary", "net.minecraft.class_309", "method_1466", "(JILnet/minecraft/class_11908;)V"),
-					long.class, int.class, net.minecraft.client.input.KeyInput.class);
+					long.class, int.class, net.minecraft.client.input.KeyEvent.class);
 			method.setAccessible(true);
-			int code = KeyBindingHelper.getBoundKeyOf(client.options.sprintKey).getCode();
-			method.invoke(client.keyboard, client.getWindow().getHandle(), action, new net.minecraft.client.input.KeyInput(code, 0, 0));
+			int code = KeyBindingHelper.getBoundKeyOf(client.options.keySprint).getValue();
+			method.invoke(client.keyboardHandler, client.getWindow().handle(), action, new net.minecraft.client.input.KeyEvent(code, 0, 0));
 		} catch (ReflectiveOperationException e) {
 			throw new RuntimeException(e);
 		}
@@ -127,8 +127,8 @@ public class DevTest implements ClientModInitializer {
 	/** Toggle Sprint on, Ctrl held for 15 ticks with key-repeats: sprint must stay ON every tick. */
 	private void flickerSteps() {
 		run("toggle sprint on, remember the body's toggle", client -> {
-			client.options.getSprintToggled().setValue(true);
-			bodyToggleBefore = client.options.sprintKey.isPressed();
+			client.options.toggleSprint().set(true);
+			bodyToggleBefore = client.options.keySprint.isDown();
 			flickered = false;
 			SprintSpeed.testSprintHeld = true;
 			sprintKeyEvent(client, org.lwjgl.glfw.GLFW.GLFW_PRESS);
@@ -148,7 +148,7 @@ public class DevTest implements ClientModInitializer {
 		waitTicks(3);
 		check("sprint OFF after letting go (not moving)", (client, t) ->
 				!io.github.autyism.freecamplus.mixin.CameraEntityAccessor.freecamplus$isSprinting());
-		check("body's toggle sprint unchanged by Ctrl in freecam", (client, t) -> client.options.sprintKey.isPressed() == bodyToggleBefore);
+		check("body's toggle sprint unchanged by Ctrl in freecam", (client, t) -> client.options.keySprint.isDown() == bodyToggleBefore);
 	}
 
 	/** Two taps must not show the pointer, three quick taps must. */
@@ -171,18 +171,18 @@ public class DevTest implements ClientModInitializer {
 		screenshot("06_self_pointer");
 	}
 
-	private static Vec3d cam() {
-		return CameraEntity.getCamera().getEntityPos();
+	private static Vec3 cam() {
+		return CameraEntity.getCamera().position();
 	}
 
-	private static void middleClick(MinecraftClient client) {
-		var camera = client.gameRenderer.getCamera();
-		LOG.info("[DevTest] INFO middle click: camera at {} yaw {} pitch {}, waypoints before: {}", camera.getCameraPos(), camera.getYaw(), camera.getPitch(), Markers.list());
-		KeyBinding.onKeyPressed(KeyBindingHelper.getBoundKeyOf(client.options.pickItemKey));
+	private static void middleClick(Minecraft client) {
+		var camera = client.gameRenderer.getMainCamera();
+		LOG.info("[DevTest] INFO middle click: camera at {} yaw {} pitch {}, waypoints before: {}", camera.position(), camera.yRot(), camera.xRot(), Markers.list());
+		KeyMapping.click(KeyBindingHelper.getBoundKeyOf(client.options.keyPickItem));
 	}
 
 	private void build() {
-		steps.add(new Step("wait for the world", (client, t) -> client.world != null && client.player != null && t > 100));
+		steps.add(new Step("wait for the world", (client, t) -> client.level != null && client.player != null && t > 100));
 		run("clear old waypoints", client -> new ArrayList<>(Markers.list()).forEach(Markers::remove));
 		run("free camera on", client -> FeatureToggle.TWEAK_FREE_CAMERA.setBooleanValue(true));
 		waitTicks(5);
@@ -192,15 +192,15 @@ public class DevTest implements ClientModInitializer {
 
 		// default sprint speed
 		run("hold forward + sprint", client -> {
-			client.options.forwardKey.setPressed(true);
-			client.options.sprintKey.setPressed(true);
+			client.options.keyUp.setDown(true);
+			client.options.keySprint.setDown(true);
 			SprintSpeed.testSprintHeld = true;
 		});
 		waitTicks(30);
 		run("measure start", client -> before = cam());
 		waitTicks(10);
 		run("measure end (default)", client -> {
-			speedDefault = cam().subtract(before).horizontalLength() / 10;
+			speedDefault = cam().subtract(before).horizontalDistance() / 10;
 			LOG.info("[DevTest] INFO sprint speed at x3: {} blocks/tick", speedDefault);
 		});
 		screenshot("02_freecam_sprint_on_x3");
@@ -217,7 +217,7 @@ public class DevTest implements ClientModInitializer {
 		run("measure start", client -> before = cam());
 		waitTicks(10);
 		check("sprint speed doubled (x6 vs x3)", (client, t) -> {
-			double speed = cam().subtract(before).horizontalLength() / 10;
+			double speed = cam().subtract(before).horizontalDistance() / 10;
 			LOG.info("[DevTest] INFO sprint speed at x6: {} blocks/tick, ratio {}", speed, speed / speedDefault);
 			return Math.abs(speed / speedDefault - 2.0) < 0.1;
 		});
@@ -225,15 +225,15 @@ public class DevTest implements ClientModInitializer {
 
 		// without sprint held the wheel is the hotbar again
 		run("release keys", client -> {
-			client.options.forwardKey.setPressed(false);
-			client.options.sprintKey.setPressed(false);
+			client.options.keyUp.setDown(false);
+			client.options.keySprint.setDown(false);
 			SprintSpeed.testSprintHeld = false;
 		});
 		waitTicks(10);
 		run("sprint toggled on but Ctrl not held: scroll", client -> {
-			client.options.sprintKey.setPressed(true); // what Toggle Sprint leaves behind
+			client.options.keySprint.setDown(true); // what Toggle Sprint leaves behind
 			scroll(client, 1.0);
-			client.options.sprintKey.setPressed(false);
+			client.options.keySprint.setDown(false);
 		});
 		check("toggled sprint without Ctrl held does not change speed", (client, t) -> SprintSpeed.factor() == 6.0);
 		run("scroll without sprint", client -> {
@@ -262,7 +262,7 @@ public class DevTest implements ClientModInitializer {
 		run("look down at the ground", client -> {
 			CameraEntity camera = CameraEntity.getCamera();
 			// back over loaded ground, 20 blocks in front of and 12 above the body
-			camera.setPos(client.player.getX(), client.player.getY() + 12, client.player.getZ() + 20);
+			camera.setPosRaw(client.player.getX(), client.player.getY() + 12, client.player.getZ() + 20);
 			camera.setCameraRotations(0F, 50F);
 			slotBefore = client.player.getInventory().getSelectedSlot();
 		});
@@ -280,7 +280,7 @@ public class DevTest implements ClientModInitializer {
 		check("waypoint set again", (client, t) -> Markers.list().size() == 1);
 		run("turn a little and set a second one", client -> {
 			CameraEntity camera = CameraEntity.getCamera();
-			camera.setCameraRotations(camera.getYaw() + 40F, 35F);
+			camera.setCameraRotations(camera.getYRot() + 40F, 35F);
 		});
 		waitTicks(3);
 		run("middle click", DevTest::middleClick);
@@ -323,14 +323,14 @@ public class DevTest implements ClientModInitializer {
 		run("summary and stop", client -> {
 			LOG.info("[DevTest] SUMMARY failures={}", failures);
 			LOG.info("[DevTest] DONE");
-			client.scheduleStop();
+			client.stop();
 		});
 	}
 
 	@org.jspecify.annotations.Nullable
-	private static KeyBinding xaeroMapKey(MinecraftClient client) {
-		for (KeyBinding key : client.options.allKeys) {
-			if (key.getId().equals("gui.xaero_open_map")) {
+	private static KeyMapping xaeroMapKey(Minecraft client) {
+		for (KeyMapping key : client.options.keyMappings) {
+			if (key.getName().equals("gui.xaero_open_map")) {
 				return key;
 			}
 		}
@@ -339,16 +339,16 @@ public class DevTest implements ClientModInitializer {
 
 	private void openMap(String name) {
 		run("open xaero world map (" + name + ")", client -> {
-			KeyBinding key = xaeroMapKey(client);
-			LOG.info("[DevTest] INFO world map key {} bound to {}", key == null ? null : key.getId(),
-					key == null ? null : key.getBoundKeyTranslationKey());
-			KeyBinding.onKeyPressed(KeyBindingHelper.getBoundKeyOf(key));
+			KeyMapping key = xaeroMapKey(client);
+			LOG.info("[DevTest] INFO world map key {} bound to {}", key == null ? null : key.getName(),
+					key == null ? null : key.saveString());
+			KeyMapping.click(KeyBindingHelper.getBoundKeyOf(key));
 		});
-		steps.add(new Step("wait for the map screen", (client, t) -> client.currentScreen != null || t > 60));
+		steps.add(new Step("wait for the map screen", (client, t) -> client.screen != null || t > 60));
 		waitTicks(40); // opening animation
 		run("log " + name, client -> LOG.info("[DevTest] INFO {}: screen {} player at {} yaw {}", name,
-				client.currentScreen == null ? null : client.currentScreen.getClass().getName(),
-				client.player.getBlockPos(), client.player.getYaw()));
+				client.screen == null ? null : client.screen.getClass().getName(),
+				client.player.blockPosition(), client.player.getYRot()));
 		screenshot(name);
 		run("close map", client -> client.setScreen(null));
 		waitTicks(10);
@@ -357,34 +357,34 @@ public class DevTest implements ClientModInitializer {
 	/** Xaero's world map: face east, look at the map, move 40 blocks east, look again. */
 	private void xaeroSteps() {
 		run("face east", client -> {
-			client.player.setYaw(-90F);
-			client.player.setPitch(0F);
+			client.player.setYRot(-90F);
+			client.player.setXRot(0F);
 		});
 		run("list key bindings", client -> {
-			for (KeyBinding key : client.options.allKeys) {
-				if (key.getId().toLowerCase().contains("xaero")) {
-					LOG.info("[DevTest] INFO key {} = {}", key.getId(), key.getBoundKeyTranslationKey());
+			for (KeyMapping key : client.options.keyMappings) {
+				if (key.getName().toLowerCase().contains("xaero")) {
+					LOG.info("[DevTest] INFO key {} = {}", key.getName(), key.saveString());
 				}
 			}
 		});
 		waitTicks(20);
 		openMap("10_map_facing_east_before");
 		run("walk east (forward)", client -> {
-			client.player.setYaw(-90F);
-			client.options.forwardKey.setPressed(true);
-			client.options.sprintKey.setPressed(true);
+			client.player.setYRot(-90F);
+			client.options.keyUp.setDown(true);
+			client.options.keySprint.setDown(true);
 		});
 		waitTicks(60);
 		run("stop walking", client -> {
-			client.options.forwardKey.setPressed(false);
-			client.options.sprintKey.setPressed(false);
+			client.options.keyUp.setDown(false);
+			client.options.keySprint.setDown(false);
 		});
 		waitTicks(10);
 		openMap("11_map_after_walking_east");
-		run("teleport 64 blocks east", client -> client.player.networkHandler.sendChatCommand("tp @s ~64 ~ ~"));
+		run("teleport 64 blocks east", client -> client.player.connection.sendCommand("tp @s ~64 ~ ~"));
 		waitTicks(40);
 		openMap("12_map_after_tp_64_east");
-		run("teleport 64 blocks north", client -> client.player.networkHandler.sendChatCommand("tp @s ~ ~ ~-64"));
+		run("teleport 64 blocks north", client -> client.player.connection.sendCommand("tp @s ~ ~ ~-64"));
 		waitTicks(40);
 		openMap("13_map_after_tp_64_north");
 	}
