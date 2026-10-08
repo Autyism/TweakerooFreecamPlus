@@ -1,5 +1,25 @@
 # Changelog
 
+## 1.0.0+26.2 — 2026-10-08
+
+- Tweakeroo Freecam Plus for Minecraft 26.2, same features as 1.0.0 for 1.21.11.
+- Needs Tweakeroo 0.29.5, Java 25 and Fabric Loader 0.19.3 or newer.
+
+### 中文
+
+- 适用于 Minecraft 26.2 的 Tweakeroo Freecam Plus，功能与 1.21.11 的 1.0.0 相同。
+- 需要 Tweakeroo 0.29.5、Java 25 和 Fabric Loader 0.19.3 或更新。
+
+## 1.0.0+26.1.2 — 2026-10-08
+
+- Tweakeroo Freecam Plus for Minecraft 26.1–26.1.2, same features as 1.0.0 for 1.21.11.
+- Needs Tweakeroo 0.28.10, Java 25 and Fabric Loader 0.19.3 or newer.
+
+### 中文
+
+- 适用于 Minecraft 26.1–26.1.2 的 Tweakeroo Freecam Plus，功能与 1.21.11 的 1.0.0 相同。
+- 需要 Tweakeroo 0.28.10、Java 25 和 Fabric Loader 0.19.3 或更新。
+
 ## 1.0.0 — 2026-10-04
 
 First public release.

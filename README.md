@@ -5,15 +5,25 @@
 
 <p align="center"><a href="#english">English</a> · <a href="#简体中文">简体中文</a></p>
 
-![Minecraft 1.21.11](https://img.shields.io/badge/Minecraft-1.21.11-62B47A) ![Fabric](https://img.shields.io/badge/Loader-Fabric-DBD0B4) ![Tweakeroo 0.27.15](https://img.shields.io/badge/Tweakeroo-0.27.15-E5A54B) ![License: GPL-3.0](https://img.shields.io/badge/License-GPL--3.0-blue)
+![Minecraft 1.21.11 | 26.1–26.2](https://img.shields.io/badge/Minecraft-1.21.11_%7C_26.1--26.2-62B47A) ![Fabric](https://img.shields.io/badge/Loader-Fabric-DBD0B4) ![Tweakeroo add-on](https://img.shields.io/badge/Tweakeroo-add--on-E5A54B) ![License: GPL-3.0](https://img.shields.io/badge/License-GPL--3.0-blue)
 
 # English
+
+**In short**
+
+- In Tweakeroo's free camera, middle-click a block to mark it; arrows lead you there once you are back in your body.
+- Hold Ctrl and scroll to fly faster or slower (x1 to x64).
+- Tap Ctrl three times to see where your character is.
+- No settings, client-side only. Needs Tweakeroo: the table under Requirements shows which version for your Minecraft.
+
+Everything else is in the folded sections below (features, how to use, settings, FAQ): click a title to open it.
 
 A small client-side add-on for the **Free Camera** of [Tweakeroo](https://modrinth.com/mod/tweakeroo). Scout a spot with the free camera, mark it with the middle mouse button, and let arrows lead you there once you are back in your body. Hold Ctrl and scroll to fly faster or slower, and tap Ctrl three times when you lose track of where you left your character.
 
 There are no settings and no switches. Install it, and Tweakeroo's free camera has these extras.
 
-## Features
+<details>
+<summary><b>Features</b> (click to open)</summary>
 
 ### Waypoints
 
@@ -40,6 +50,8 @@ There are no settings and no switches. Install it, and Tweakeroo's free camera h
 - **No flickering.** If you use the vanilla "Sprint: Toggle" setting, the free camera now sprints while you actually hold Ctrl, instead of switching on and off while the key is held. As in Tweakeroo, sprint then stays on until you stop moving forward or backward.
 - **Your character's sprint is left alone.** With Toggle Sprint, pressing Ctrl in the free camera no longer switches your character's sprint on or off. When you leave the free camera, it is exactly as you left it.
 
+</details>
+
 ## Screenshots
 
 ![Setting a waypoint](docs/images/waypoint-set.png)
@@ -62,7 +74,8 @@ The sprint indicator at the top of the screen while flying in the free camera.
 
 Two scrolls up with Ctrl held: the sprint speed is now x6.
 
-## How to use
+<details>
+<summary><b>How to use</b> (click to open)</summary>
 
 The mod adds no key bindings, commands or settings screen of its own. It uses two vanilla keys, and only while Tweakeroo's free camera is on:
 
@@ -94,7 +107,10 @@ Outside the free camera, Pick Block, Sprint and the mouse wheel work as usual.
 
 In the free camera, tap Ctrl three times within about 0.7 seconds. For 5 seconds your character is outlined in cyan, and an arrow on the crosshair ring shows its direction and distance.
 
-## Settings
+</details>
+
+<details>
+<summary><b>Settings</b> (click to open)</summary>
 
 There is nothing to configure: no options screen and no config file. For reference, these are the fixed values the mod uses:
 
@@ -109,36 +125,43 @@ There is nothing to configure: no options screen and no config file. For referen
 | Triple tap | 3 taps within 0.7 seconds | Shows the pointer to your character. |
 | Pointer time | 5 seconds | How long the pointer to your character stays visible. |
 
+</details>
+
 ## Requirements
 
-| Dependency | Version |
-|---|---|
-| Minecraft | 1.21.11 |
-| Fabric Loader | 0.17.0 or newer |
-| [Fabric API](https://modrinth.com/mod/fabric-api) | for 1.21.11 (built with 0.141.6) |
-| [Tweakeroo](https://modrinth.com/mod/tweakeroo) | 0.27.15, exactly this version |
-| [MaLiLib](https://modrinth.com/mod/malilib) | the version Tweakeroo 0.27.15 needs: 0.27.19 or newer within 0.27.x (built with 0.27.20) |
-| Java | 21 |
+Each Minecraft version has its own jar, and each jar works with exactly one Tweakeroo version:
+
+| Minecraft | Jar | [Tweakeroo](https://modrinth.com/mod/tweakeroo) | [MaLiLib](https://modrinth.com/mod/malilib) | Java |
+|---|---|---|---|---|
+| 1.21.11 | `tweakeroo-freecam-plus-1.0.0.jar` | 0.27.15 | 0.27.19 or newer within 0.27.x | 21 |
+| 26.1, 26.1.1, 26.1.2 | `tweakeroo-freecam-plus-1.0.0+26.1.2.jar` | 0.28.10 | 0.28.11 or newer within 0.28.x | 25 |
+| 26.2 | `tweakeroo-freecam-plus-1.0.0+26.2.jar` | 0.29.5 | 0.29.5 or newer within 0.29.x | 25 |
+
+You also need [Fabric Loader](https://fabricmc.net/use/) (0.17.0 or newer; 0.19.3 or newer on 26.x) and [Fabric API](https://modrinth.com/mod/fabric-api) for your Minecraft version.
 
 Client-side only. The server does not need it, so it works in singleplayer and on servers.
 
-## Compatibility
+<details>
+<summary><b>Compatibility</b> (click to open)</summary>
 
-- **Tweakeroo version.** This mod changes how Tweakeroo's free camera moves, so it is tied to Tweakeroo 0.27.15. With any other Tweakeroo version, Fabric Loader stops the game at startup and tells you which version is needed.
+- **Tweakeroo version.** This mod changes how Tweakeroo's free camera moves, so each jar is tied to one Tweakeroo version (see the table under Requirements). With any other Tweakeroo version, Fabric Loader stops the game at startup and tells you which version is needed.
 - **Other free camera mods.** Only Tweakeroo's Free Camera gets the extras. Other free camera mods are not affected.
 - **Pick Block in the free camera.** While the free camera is on, the Pick Block key sets waypoints and does not pick blocks. Outside the free camera it works as usual.
 - **Ctrl + mouse wheel.** The wheel is only taken over while the free camera is on and Sprint is held. If another mod also uses Ctrl + mouse wheel, the two can get in each other's way in that moment.
 - **Sprint on a mouse button.** Ctrl + wheel works with any Sprint binding, but the triple tap only works when Sprint is bound to a keyboard key.
 - **Sodium, Iris and other rendering mods.** There are no compatibility notes yet. If waypoint boxes or beams do not show up, please [open an issue](https://github.com/Autyism/TweakerooFreecamPlus/issues).
 
+</details>
+
 ## Installation
 
-1. Install [Fabric Loader](https://fabricmc.net/use/) for Minecraft 1.21.11.
-2. Download [Fabric API](https://modrinth.com/mod/fabric-api), [MaLiLib](https://modrinth.com/mod/malilib), [Tweakeroo](https://modrinth.com/mod/tweakeroo) 0.27.15 and Tweakeroo Freecam Plus.
+1. Install [Fabric Loader](https://fabricmc.net/use/) for your Minecraft version.
+2. Download [Fabric API](https://modrinth.com/mod/fabric-api), [MaLiLib](https://modrinth.com/mod/malilib) and [Tweakeroo](https://modrinth.com/mod/tweakeroo) for your Minecraft version (Tweakeroo exactly the version in the table above), and the Tweakeroo Freecam Plus jar for your version from the [releases](https://github.com/Autyism/TweakerooFreecamPlus/releases).
 3. Put all four `.jar` files into the `mods` folder of your Minecraft directory (or of your launcher instance).
 4. Start the game with the Fabric profile and switch on Tweakeroo's Free Camera.
 
-## FAQ
+<details>
+<summary><b>FAQ</b> (click to open)</summary>
 
 **My middle click removes a waypoint instead of setting a new one.**
 
@@ -160,11 +183,16 @@ In `config/tweakeroo_freecam_plus/worlds/` inside your Minecraft folder, one fil
 
 No. Waypoints only exist on your own screen; this mod sends nothing to the server.
 
-## Known limitations
+</details>
+
+<details>
+<summary><b>Known limitations</b> (click to open)</summary>
 
 - The arrows show the horizontal direction only. Height is shown by the above/below tag.
 - The sprint speed is not saved. It starts at x3 every time the free camera is switched on.
 - Waypoints are stored by world folder name or server address. If either one changes, the old waypoints are not found.
+
+</details>
 
 ## Credits
 
@@ -176,11 +204,21 @@ Tweakeroo Freecam Plus is licensed under the GNU General Public License v3.0 (GP
 
 # 简体中文
 
+**一句话看懂**
+
+- 在 Tweakeroo 的灵魂出窍里按鼠标中键给方块打标记，回到本体后跟着箭头走过去。
+- 按住 Ctrl 滚滚轮，飞得更快或更慢（x1 到 x64）。
+- 连按三下 Ctrl，看本体在哪儿。
+- 不用设置，纯客户端。需要 Tweakeroo，你的 Minecraft 版本配哪个 Tweakeroo 见「前置与运行环境」里的表。
+
+详细说明都在下面折叠起来的部分（功能、使用方法、设置、常见问题），点标题就能展开。
+
 一个纯客户端的小附属模组，用来增强 [Tweakeroo](https://modrinth.com/mod/tweakeroo) 的「灵魂出窍」（Free Camera，自由视角）。先用灵魂出窍飞过去看好位置，按鼠标中键打个标记，回到本体后跟着准星周围的箭头走过去就行。按住 Ctrl 滚动滚轮可以飞得更快或更慢；忘了本体停在哪儿，就连按三下 Ctrl。
 
 没有任何设置和开关，装上之后 Tweakeroo 的灵魂出窍就带有这些功能。
 
-## 功能
+<details>
+<summary><b>功能</b>（点开查看）</summary>
 
 ### 标记点
 
@@ -207,6 +245,8 @@ Tweakeroo Freecam Plus is licensed under the GNU General Public License v3.0 (GP
 - **不再闪烁。** 如果你在原版设置里把「疾跑」设成了「切换」，现在灵魂出窍只在你真正按住 Ctrl 时疾跑，按住期间也不会再忽开忽关。和 Tweakeroo 原本一样，疾跑开始后会一直保持，直到你停止前进或后退。
 - **不影响本体的疾跑状态。** 使用「切换」模式时，在灵魂出窍里按 Ctrl 不会再切换本体的疾跑。退出灵魂出窍时，本体的疾跑状态和进入前完全一样。
 
+</details>
+
 ## 截图
 
 ![打标记](docs/images/zh/waypoint-set.png)
@@ -229,7 +269,8 @@ Tweakeroo Freecam Plus is licensed under the GNU General Public License v3.0 (GP
 
 按住 Ctrl 向上滚两格后，疾跑速度变成了 x6。
 
-## 使用方法
+<details>
+<summary><b>使用方法</b>（点开查看）</summary>
 
 本模组没有自己的键位、命令或设置界面。它只借用两个原版按键，而且只在 Tweakeroo 的灵魂出窍开启时生效：
 
@@ -261,7 +302,10 @@ Tweakeroo Freecam Plus is licensed under the GNU General Public License v3.0 (GP
 
 在灵魂出窍中，约 0.7 秒内连按三下 Ctrl。接下来 5 秒，本体会有一圈青色描边，准星周围的箭头会显示本体的方向和距离。
 
-## 设置
+</details>
+
+<details>
+<summary><b>设置</b>（点开查看）</summary>
 
 没有任何可以设置的东西：没有设置界面，也没有配置文件。下面是本模组使用的固定数值，供参考：
 
@@ -276,36 +320,43 @@ Tweakeroo Freecam Plus is licensed under the GNU General Public License v3.0 (GP
 | 连按三下 | 0.7 秒内按 3 次 | 显示指向本体的箭头。 |
 | 指示时长 | 5 秒 | 指向本体的箭头和描边显示多久。 |
 
+</details>
+
 ## 前置与运行环境
 
-| 依赖 | 版本 |
-|---|---|
-| Minecraft | 1.21.11 |
-| Fabric Loader | 0.17.0 或更高 |
-| [Fabric API](https://modrinth.com/mod/fabric-api) | 适用于 1.21.11 的版本（构建时使用 0.141.6） |
-| [Tweakeroo](https://modrinth.com/mod/tweakeroo) | 0.27.15，必须是这个版本 |
-| [MaLiLib](https://modrinth.com/mod/malilib) | Tweakeroo 0.27.15 所需的版本：0.27.19 及以上的 0.27.x（构建时使用 0.27.20） |
-| Java | 21 |
+每个 Minecraft 版本有单独的 jar，每个 jar 只配一个 Tweakeroo 版本：
+
+| Minecraft | jar | [Tweakeroo](https://modrinth.com/mod/tweakeroo) | [MaLiLib](https://modrinth.com/mod/malilib) | Java |
+|---|---|---|---|---|
+| 1.21.11 | `tweakeroo-freecam-plus-1.0.0.jar` | 0.27.15 | 0.27.19 及以上的 0.27.x | 21 |
+| 26.1、26.1.1、26.1.2 | `tweakeroo-freecam-plus-1.0.0+26.1.2.jar` | 0.28.10 | 0.28.11 及以上的 0.28.x | 25 |
+| 26.2 | `tweakeroo-freecam-plus-1.0.0+26.2.jar` | 0.29.5 | 0.29.5 及以上的 0.29.x | 25 |
+
+另外还需要对应你 Minecraft 版本的 [Fabric Loader](https://fabricmc.net/use/)（0.17.0 或更高；26.x 要 0.19.3 或更高）和 [Fabric API](https://modrinth.com/mod/fabric-api)。
 
 纯客户端模组。服务器不需要安装，单人游戏和服务器里都能用。
 
-## 兼容性
+<details>
+<summary><b>兼容性</b>（点开查看）</summary>
 
-- **Tweakeroo 版本。** 本模组会改动 Tweakeroo 灵魂出窍的移动方式，所以绑定了 Tweakeroo 0.27.15。装了其他版本的 Tweakeroo 时，Fabric Loader 会在启动时报错并提示需要哪个版本。
+- **Tweakeroo 版本。** 本模组会改动 Tweakeroo 灵魂出窍的移动方式，所以每个 jar 只认一个 Tweakeroo 版本（见「前置与运行环境」里的表）。装了其他版本的 Tweakeroo 时，Fabric Loader 会在启动时报错并提示需要哪个版本。
 - **其他自由视角模组。** 只有 Tweakeroo 的灵魂出窍会获得这些功能，其他自由视角模组不受影响。
 - **灵魂出窍中的选取方块。** 灵魂出窍开启时，「选取方块」键用来打标记，不会再选取方块；退出灵魂出窍后恢复正常。
 - **Ctrl + 滚轮。** 只有在灵魂出窍开启并且按住疾跑键时，滚轮才会被本模组接管。如果其他模组也用 Ctrl + 滚轮，这时两者可能会互相干扰。
 - **疾跑绑定在鼠标键上。** Ctrl + 滚轮对任何疾跑键位都有效，但连按三下只在疾跑绑定到键盘按键时才有效。
 - **Sodium、Iris 等渲染模组。** 目前还没有兼容性说明。如果标记的方框或光柱显示不出来，欢迎[提交 issue](https://github.com/Autyism/TweakerooFreecamPlus/issues)。
 
+</details>
+
 ## 安装
 
-1. 为 Minecraft 1.21.11 安装 [Fabric Loader](https://fabricmc.net/use/)。
-2. 下载 [Fabric API](https://modrinth.com/mod/fabric-api)、[MaLiLib](https://modrinth.com/mod/malilib)、[Tweakeroo](https://modrinth.com/mod/tweakeroo) 0.27.15 和 Tweakeroo Freecam Plus。
+1. 为你的 Minecraft 版本安装 [Fabric Loader](https://fabricmc.net/use/)。
+2. 下载对应你 Minecraft 版本的 [Fabric API](https://modrinth.com/mod/fabric-api)、[MaLiLib](https://modrinth.com/mod/malilib) 和 [Tweakeroo](https://modrinth.com/mod/tweakeroo)（Tweakeroo 必须是上表里的那个版本），再从 [Releases](https://github.com/Autyism/TweakerooFreecamPlus/releases) 下载对应版本的 Tweakeroo Freecam Plus jar。
 3. 把这四个 `.jar` 文件放进游戏目录（或启动器版本隔离目录）下的 `mods` 文件夹。
 4. 用 Fabric 启动游戏，打开 Tweakeroo 的灵魂出窍即可使用。
 
-## 常见问题
+<details>
+<summary><b>常见问题</b>（点开查看）</summary>
 
 **按中键时取消了旧标记，而不是打新标记。**
 
@@ -327,11 +378,16 @@ Tweakeroo Freecam Plus is licensed under the GNU General Public License v3.0 (GP
 
 看不到。标记只显示在你自己的屏幕上，本模组不会向服务器发送任何东西。
 
-## 已知限制
+</details>
+
+<details>
+<summary><b>已知限制</b>（点开查看）</summary>
 
 - 箭头只表示水平方向，高度由「上方 / 下方」提示表示。
 - 疾跑速度不会保存，每次开启灵魂出窍都从 x3 开始。
 - 标记按存档文件夹名或服务器地址保存。改了文件夹名或服务器地址后，旧的标记就找不到了。
+
+</details>
 
 ## 鸣谢
 
