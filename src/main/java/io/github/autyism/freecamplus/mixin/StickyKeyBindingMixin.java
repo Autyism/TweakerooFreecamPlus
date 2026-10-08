@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  */
 @Mixin(ToggleKeyMapping.class)
 public class StickyKeyBindingMixin {
-	@Inject(method = "setDown", at = @At("HEAD"), cancellable = true)
+	@Inject(method = "setDown(Z)V", at = @At("HEAD"), cancellable = true)
 	private void freecamplus$freezeSprintToggle(boolean pressed, CallbackInfo ci) {
 		Minecraft client = Minecraft.getInstance();
 		if (pressed && CameraEntity.getCamera() != null && client.options != null

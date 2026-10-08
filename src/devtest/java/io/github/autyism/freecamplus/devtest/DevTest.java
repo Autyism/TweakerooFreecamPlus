@@ -32,6 +32,14 @@ public class DevTest implements ClientModInitializer {
 	private int index;
 	private int ticks;
 	private int failures;
+
+	/** Run inside Fabric's client game test ({@link DevTestGameTest}), which makes the world and ends the game. */
+	static final boolean GAME_TEST = System.getProperty("fabric.client.gametest") != null;
+	/** Game test: set once the world is loaded and drawn. */
+	static volatile boolean worldReady;
+	/** Game test: set when all steps ran. */
+	static volatile boolean finished;
+	static volatile int failureCount;
 	private Vec3 before = Vec3.ZERO;
 	private double speedDefault;
 	private int slotBefore;
@@ -182,7 +190,8 @@ public class DevTest implements ClientModInitializer {
 	}
 
 	private void build() {
-		steps.add(new Step("wait for the world", (client, t) -> client.level != null && client.player != null && t > 100));
+		steps.add(new Step("wait for the world", (client, t) -> client.level != null && client.player != null && t > 100
+				&& (!GAME_TEST || worldReady)));
 		run("clear old waypoints", client -> new ArrayList<>(Markers.list()).forEach(Markers::remove));
 		run("free camera on", client -> FeatureToggle.TWEAK_FREE_CAMERA.setBooleanValue(true));
 		waitTicks(5);
@@ -323,7 +332,11 @@ public class DevTest implements ClientModInitializer {
 		run("summary and stop", client -> {
 			LOG.info("[DevTest] SUMMARY failures={}", failures);
 			LOG.info("[DevTest] DONE");
-			client.stop();
+			failureCount = failures;
+			finished = true;
+			if (!GAME_TEST) {
+				client.stop();
+			}
 		});
 	}
 

@@ -18,7 +18,7 @@ public class MouseMixin {
 	@Final
 	private Minecraft minecraft;
 
-	@Inject(method = "onScroll", at = @At("HEAD"), cancellable = true)
+	@Inject(method = "onScroll(JDD)V", at = @At("HEAD"), cancellable = true)
 	private void freecamplus$sprintSpeedScroll(long window, double horizontal, double vertical, CallbackInfo ci) {
 		if (window != minecraft.getWindow().handle() || minecraft.screen != null || vertical == 0
 				|| CameraEntity.getCamera() == null || !SprintSpeed.sprintKeyHeld(minecraft)) {

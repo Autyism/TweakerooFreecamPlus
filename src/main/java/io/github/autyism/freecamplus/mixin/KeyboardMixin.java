@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 /** Counts real presses (not key-repeats) of the sprint key in the free camera, for the triple tap. */
 @Mixin(KeyboardHandler.class)
 public class KeyboardMixin {
-	@Inject(method = "keyPress", at = @At("HEAD"))
+	@Inject(method = "keyPress(JILnet/minecraft/client/input/KeyEvent;)V", at = @At("HEAD"))
 	private void freecamplus$sprintTaps(long window, int action, KeyEvent input, CallbackInfo ci) {
 		Minecraft client = Minecraft.getInstance();
 		if (action != GLFW.GLFW_PRESS || CameraEntity.getCamera() == null || client.screen != null

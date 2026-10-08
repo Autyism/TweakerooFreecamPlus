@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(CameraEntity.class)
 public class CameraEntityMixin {
 	/** Tweakeroo multiplies the forward speed by a fixed 3.0 while sprinting; use ours instead. */
-	@ModifyConstant(method = "movementTick", remap = false, constant = @Constant(doubleValue = 3.0))
+	@ModifyConstant(method = "movementTick()V", remap = false, constant = @Constant(doubleValue = 3.0))
 	private static double freecamplus$sprintFactor(double original) {
 		return SprintSpeed.factor();
 	}
@@ -26,14 +26,14 @@ public class CameraEntityMixin {
 	 * key-repeat while Ctrl is held (sprint flickered ON/OFF). Use the physical key instead: sprint
 	 * while Ctrl is held, and (Tweakeroo's own rule) it stays on until you stop moving forward.
 	 */
-	@ModifyExpressionValue(method = "movementTick", remap = false, at = @At(value = "INVOKE",
+	@ModifyExpressionValue(method = "movementTick()V", remap = false, at = @At(value = "INVOKE",
 			target = "Lnet/minecraft/client/KeyMapping;isDown()Z", ordinal = 0, remap = true))
 	private static boolean freecamplus$physicalSprint(boolean original) {
 		return SprintSpeed.sprintKeyHeld(Minecraft.getInstance());
 	}
 
 	/** Every time the free camera is switched on it starts at the normal speed (x3). */
-	@Inject(method = "setCameraState", remap = false, at = @At("HEAD"))
+	@Inject(method = "setCameraState(ZLfi/dy/masa/tweakeroo/util/CameraPreset;)V", remap = false, at = @At("HEAD"))
 	private static void freecamplus$onToggle(boolean enabled, CameraPreset preset, CallbackInfo ci) {
 		SprintSpeed.reset();
 		SelfPointer.hide();

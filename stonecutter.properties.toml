@@ -1,0 +1,16 @@
+# Shared values; per-version sections below override or add to them.
+mod.id = "tweakeroo_freecam_plus"
+mod.archives_name = "tweakeroo-freecam-plus"
+mod.version = "1.0.0"
+mod.group = "io.github.autyism.freecamplus"
+mod.loader_compat = ">=0.17.0"
+mod.java_compat = ">=21"
+
+deps.fabric_loader = "0.19.5"
+
+["1.21.11"]
+mod.mc_compat = "1.21.11"
+mod.tweakeroo_compat = "0.27.15"
+deps.fabric_api = "0.141.6+1.21.11"
+deps.tweakeroo = "0.27.15"
+deps.malilib = "0.27.20"
