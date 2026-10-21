@@ -29,6 +29,19 @@ stonecutter parameters {
         "(\\.|float )xRot\\(\\)" to "$1getXRot()",
     )
 
+    // Before 1.21.9 the window handle had another getter.
+    oneWay(current.parsed < "1.21.9",
+        "\\.getWindow\\(\\)\\.handle\\(\\)" to ".getWindow().getWindow()",
+    )
+    // Before 1.21.6: the GUI was moved with a 3D PoseStack and the camera's position had a getter.
+    oneWay(current.parsed < "1.21.6",
+        "\\bcontext\\.pose\\(\\)\\.pushMatrix\\(\\)" to "context.pose().pushPose()",
+        "\\bcontext\\.pose\\(\\)\\.popMatrix\\(\\)" to "context.pose().popPose()",
+        "\\bcontext\\.pose\\(\\)\\.translate\\(([^;]*)\\);" to "context.pose().translate($1, 0F);",
+        "\\bcontext\\.pose\\(\\)\\.rotate\\(([^;]*)\\);" to "context.pose().mulPose(com.mojang.math.Axis.ZP.rotation($1));",
+        "\\b(camera|getMainCamera\\(\\))\\.position\\(\\)" to "$1.getPosition()",
+    )
+
     // 26.1: GUI drawing renamed (same arguments). These calls only ever go to GuiGraphics in this code.
     oneWay(current.parsed >= "26.1",
         "\\bGuiGraphics\\b" to "GuiGraphicsExtractor",

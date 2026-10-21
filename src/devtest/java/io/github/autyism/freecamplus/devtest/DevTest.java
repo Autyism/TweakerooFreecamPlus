@@ -99,8 +99,14 @@ public class DevTest implements ClientModInitializer {
 			if (t < 6) {
 				return false;
 			}
+			// 1.21.5's screenshots have no size option
+			//? if >=1.21.6 {
 			Screenshot.grab(client.gameDirectory, "devtest/" + name + ".png", client.getMainRenderTarget(), 1,
 					message -> LOG.info("[DevTest] screenshot {}", name));
+			//?} else {
+			/*Screenshot.grab(client.gameDirectory, "devtest/" + name + ".png", client.getMainRenderTarget(),
+					message -> LOG.info("[DevTest] screenshot {}", name));
+			*///?}
 			return true;
 		}));
 	}
@@ -126,12 +132,21 @@ public class DevTest implements ClientModInitializer {
 	/** A real keyboard event for the sprint key, through the game's own key handler. */
 	private static void sprintKeyEvent(Minecraft client, int action) {
 		try {
+			int code = KeyBindingHelper.getBoundKeyOf(client.options.keySprint).getValue();
+			// From 1.21.9 a key press is a KeyEvent; before, it was (key, scancode, action, modifiers)
+			//? if >=1.21.9 {
 			Method method = net.minecraft.client.KeyboardHandler.class.getDeclaredMethod(
 					gameMethod("net.minecraft.class_309", "method_1466", "(JILnet/minecraft/class_11908;)V", "keyPress"),
 					long.class, int.class, net.minecraft.client.input.KeyEvent.class);
 			method.setAccessible(true);
-			int code = KeyBindingHelper.getBoundKeyOf(client.options.keySprint).getValue();
 			method.invoke(client.keyboardHandler, client.getWindow().handle(), action, new net.minecraft.client.input.KeyEvent(code, 0, 0));
+			//?} else {
+			/*Method method = net.minecraft.client.KeyboardHandler.class.getDeclaredMethod(
+					gameMethod("net.minecraft.class_309", "method_1466", "(JIIII)V", "keyPress"),
+					long.class, int.class, int.class, int.class, int.class);
+			method.setAccessible(true);
+			method.invoke(client.keyboardHandler, client.getWindow().handle(), code, 0, action, 0);
+			*///?}
 		} catch (ReflectiveOperationException e) {
 			throw new RuntimeException(e);
 		}

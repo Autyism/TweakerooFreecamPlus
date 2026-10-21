@@ -40,6 +40,8 @@ dependencies {
     modCompileOnly(malilib) { isTransitive = false }
     modLocalRuntime(tweakeroo) { isTransitive = false }
     modLocalRuntime(malilib) { isTransitive = false }
+    // -Pquiet=<jar>: one more local mod for the dev clients only (for example one that keeps the test window off screen)
+    providers.gradleProperty("quiet").orNull?.let { modLocalRuntime(files(it)) }
 }
 
 // The dev clients don't unpack the jars Tweakeroo carries inside (conditional-mixin): they are taken out

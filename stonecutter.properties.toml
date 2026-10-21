@@ -8,6 +8,20 @@ mod.java_compat = ">=21"
 
 deps.fabric_loader = "0.19.5"
 
+["1.21.5"]
+mod.mc_compat = "1.21.5"
+mod.tweakeroo_compat = "0.24.3"
+deps.fabric_api = "0.128.2+1.21.5"
+deps.tweakeroo = "0.24.3"
+deps.malilib = "0.24.3"
+
+["1.21.8"]
+mod.mc_compat = ">=1.21.6 <=1.21.8"
+mod.tweakeroo_compat = "0.25.6"
+deps.fabric_api = "0.136.1+1.21.8"
+deps.tweakeroo = "0.25.6"
+deps.malilib = "0.25.7"
+
 ["1.21.10"]
 mod.mc_compat = ">=1.21.9 <=1.21.10"
 mod.tweakeroo_compat = "0.26.5"
