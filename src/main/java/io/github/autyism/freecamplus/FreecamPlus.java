@@ -4,8 +4,13 @@ import fi.dy.masa.tweakeroo.util.CameraEntity;
 import io.github.autyism.freecamplus.mixin.CameraEntityAccessor;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+//? if >=1.21.6 {
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
+//?} else {
+/*import net.fabricmc.fabric.api.client.rendering.v1.HudLayerRegistrationCallback;
+import net.fabricmc.fabric.api.client.rendering.v1.IdentifiedLayer;
+*///?}
 //? if >=26.1 {
 /*import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderEvents;
 *///?} elif >=1.21.11 {
@@ -60,7 +65,12 @@ public class FreecamPlus implements ClientModInitializer {
 		WorldRenderEvents.BEFORE_DEBUG_RENDER.register(context -> renderWorld());
 		//?}
 		// (before 1.21.11 the mod's own hook calls renderWorld(), see mixin.LegacyDebugRendererMixin)
+		//? if >=1.21.6 {
 		HudElementRegistry.attachElementBefore(VanillaHudElements.CHAT, Identifier.fromNamespaceAndPath(MOD_ID, "hud"), FreecamPlus::renderHud);
+		//?} else {
+		/*HudLayerRegistrationCallback.EVENT.register(layers -> layers.attachLayerBefore(IdentifiedLayer.CHAT,
+				Identifier.fromNamespaceAndPath(MOD_ID, "hud"), FreecamPlus::renderHud));
+		*///?}
 	}
 
 	/** Before the game handles its key presses: middle clicks in the free camera are ours. */
