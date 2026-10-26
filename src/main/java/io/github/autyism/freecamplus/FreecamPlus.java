@@ -89,6 +89,8 @@ public class FreecamPlus implements ClientModInitializer {
 	}
 
 	private static void onEndTick(Minecraft client) {
+		//? if >=1.21.11 <26.1
+		FreecamInteract.tick(client);
 		Markers.sync(client);
 		if (client.player != null && client.level != null && !Markers.list().isEmpty()) {
 			Markers.removeArrived(dimension(client), client.player.blockPosition());

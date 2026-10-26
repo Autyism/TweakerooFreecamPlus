@@ -30,6 +30,7 @@ deps.tweakeroo = "0.26.5"
 deps.malilib = "0.26.8"
 
 ["1.21.11"]
+mod.version = "1.1.0"
 mod.mc_compat = "1.21.11"
 mod.tweakeroo_compat = "0.27.15"
 deps.fabric_api = "0.141.6+1.21.11"
