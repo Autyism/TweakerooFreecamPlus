@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.1.0+1.21.11 — 2026-10-27
+
+- Left and right click work in Tweakeroo's free camera, on what the camera looks at, as long as your character could reach it.
+- Blocks placed from the free camera face the camera's way; buckets and other aimed items hit the camera's block; holding sneak while clicking sneaks your character for that click.
+
+### 中文
+
+- 灵魂出窍时左键、右键可以用了，作用在相机看着的东西上（本体够得着的范围内）。
+- 在灵魂出窍里放的方块按相机的方向放；桶之类自己瞄准的物品用在相机看着的方块上；按住潜行点击时本体潜行这一下。
+
 ## 1.0.0+1.21.8 — 2026-10-22
 
 - Tweakeroo Freecam Plus for Minecraft 1.21.6–1.21.8, same features as 1.0.0 for 1.21.11.

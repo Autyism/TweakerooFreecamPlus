@@ -364,6 +364,8 @@ public class DevTest implements ClientModInitializer {
 			xaeroSteps();
 		}
 
+		//? if >=1.21.11 <26.1
+		interactSteps();
 		run("summary and stop", client -> {
 			LOG.info("[DevTest] SUMMARY failures={}", failures);
 			LOG.info("[DevTest] DONE");
@@ -401,6 +403,88 @@ public class DevTest implements ClientModInitializer {
 		run("close map", client -> client.setScreen(null));
 		waitTicks(10);
 	}
+
+	//? if >=1.21.11 <26.1 {
+	private net.minecraft.core.BlockPos stone;
+	private float playerYaw;
+
+	/** A command run by the integrated server itself (the test world has no cheats for the player) */
+	private static void op(Minecraft client, String command) {
+		var server = client.getSingleplayerServer();
+		if (server == null) return;
+		String name = client.player.getGameProfile().name();
+		server.execute(() -> server.getCommands().performPrefixedCommand(server.createCommandSourceStack(), command.replace("@s", name)));
+	}
+
+	/** Puts the camera at (x, y, z) looking at the centre of target */
+	private static void aim(Minecraft client, double x, double y, double z, net.minecraft.world.phys.Vec3 target) {
+		var cam = CameraEntity.getCamera();
+		cam.setPos(x, y, z);
+		double dx = target.x - x, dy = target.y - (y + cam.getEyeHeight()), dz = target.z - z;
+		float yaw = (float) Math.toDegrees(Math.atan2(-dx, dz));
+		float pitch = (float) -Math.toDegrees(Math.atan2(dy, Math.sqrt(dx * dx + dz * dz)));
+		cam.setCameraRotations(yaw, pitch);
+		fi.dy.masa.tweakeroo.util.CameraUtils.setCameraRotations(yaw, pitch);
+	}
+
+	/** Clicks from the free camera: place facing the camera's way, break, nothing out of the character's reach */
+	private void interactSteps() {
+		run("interact: free camera off, creative, a stone two blocks east", client -> {
+			FeatureToggle.TWEAK_FREE_CAMERA.setBooleanValue(false);
+			op(client, "gamemode creative @s");
+			var p = client.player.blockPosition();
+			stone = p.east(2);
+			op(client, String.format("fill %d %d %d %d %d %d air", p.getX() + 1, p.getY(), p.getZ() - 2, p.getX() + 3, p.getY() + 3, p.getZ() + 2));
+			op(client, String.format("setblock %d %d %d stone", stone.getX(), stone.getY(), stone.getZ()));
+			op(client, "item replace entity @s weapon.mainhand with oak_stairs 8");
+			client.player.setYRot(-90F); // the character faces east
+			client.player.setXRot(0F);
+			playerYaw = -90F;
+		});
+		waitTicks(20);
+		run("free camera on", client -> FeatureToggle.TWEAK_FREE_CAMERA.setBooleanValue(true));
+		waitTicks(10);
+		run("camera south of the stone, looking north down at its top", client ->
+				aim(client, stone.getX() + 0.5, stone.getY() + 1.4, stone.getZ() + 2.6, net.minecraft.world.phys.Vec3.atCenterOf(stone).add(0, 0.5, 0)));
+		waitTicks(5);
+		run("log the target", client -> {
+			var cam = CameraEntity.getCamera();
+			LOG.info("[DevTest] INFO stone {} player {} camera {} eye {} yaw {} pitch {} cameraEntity {} hit {} {}", stone, client.player.position(),
+					cam == null ? null : cam.position(), cam == null ? null : cam.getEyePosition(), cam == null ? 0 : cam.getYRot(), cam == null ? 0 : cam.getXRot(),
+					client.getCameraEntity() == cam, client.hitResult == null ? null : client.hitResult.getType(),
+					client.hitResult instanceof net.minecraft.world.phys.BlockHitResult b ? b.getBlockPos() + " " + b.getDirection() : "");
+		});
+		check("the crosshair target is the stone's top (from the camera)", (client, t) -> client.hitResult instanceof net.minecraft.world.phys.BlockHitResult b
+				&& b.getType() == net.minecraft.world.phys.HitResult.Type.BLOCK && b.getBlockPos().equals(stone) && b.getDirection() == net.minecraft.core.Direction.UP);
+		run("right click", client -> KeyMapping.click(KeyBindingHelper.getBoundKeyOf(client.options.keyUse)));
+		waitTicks(10);
+		check("stairs placed on the stone, facing the camera's way (north), not the character's (east)", (client, t) -> {
+			var s = client.level.getBlockState(stone.above());
+			LOG.info("[DevTest] INFO placed: {}", s);
+			return s.is(net.minecraft.world.level.block.Blocks.OAK_STAIRS)
+					&& s.getValue(net.minecraft.world.level.block.StairBlock.FACING) == net.minecraft.core.Direction.NORTH;
+		});
+		check("the character faces east again", (client, t) -> Math.abs(net.minecraft.util.Mth.wrapDegrees(client.player.getYRot() - playerYaw)) < 1.0);
+		screenshot("20_freecam_placed_stairs");
+		run("look at the stairs", client -> aim(client, stone.getX() + 0.5, stone.getY() + 1.4, stone.getZ() + 2.6, net.minecraft.world.phys.Vec3.atCenterOf(stone.above())));
+		waitTicks(5);
+		run("log before left click", client -> LOG.info("[DevTest] INFO before attack: mode {} hit {} {} missTime? ", client.gameMode.getPlayerMode(),
+				client.hitResult == null ? null : client.hitResult.getType(),
+				client.hitResult instanceof net.minecraft.world.phys.BlockHitResult b ? b.getBlockPos() + " " + b.getDirection() : ""));
+		run("left click", client -> KeyMapping.click(KeyBindingHelper.getBoundKeyOf(client.options.keyAttack)));
+		waitTicks(10);
+		check("left click from the camera broke the stairs", (client, t) -> client.level.getBlockState(stone.above()).isAir());
+		run("camera far away, looking at a block out of the character's reach", client -> {
+			var far = stone.east(12);
+			op(client, String.format("setblock %d %d %d stone", far.getX(), far.getY(), far.getZ()));
+			aim(client, far.getX() + 0.5, far.getY() + 1.4, far.getZ() + 2.6, net.minecraft.world.phys.Vec3.atCenterOf(far).add(0, 0.5, 0));
+		});
+		waitTicks(10);
+		check("out of the character's reach: no target", (client, t) -> client.hitResult == null || client.hitResult.getType() == net.minecraft.world.phys.HitResult.Type.MISS);
+		run("free camera off", client -> FeatureToggle.TWEAK_FREE_CAMERA.setBooleanValue(false));
+		waitTicks(10);
+	}
+	//?}
 
 	/** Xaero's world map: face east, look at the map, move 40 blocks east, look again. */
 	private void xaeroSteps() {

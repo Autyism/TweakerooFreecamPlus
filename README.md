@@ -14,6 +14,7 @@
 - In Tweakeroo's free camera, middle-click a block to mark it; arrows lead you there once you are back in your body.
 - Hold Ctrl and scroll to fly faster or slower (x1 to x64).
 - Tap Ctrl three times to see where your character is.
+- Left and right click work on what the camera looks at (within your character's reach); placed blocks face the camera's way (Minecraft 1.21.11).
 - No settings, client-side only. Needs Tweakeroo: the table under Requirements shows which version for your Minecraft.
 
 Everything else is in the folded sections below (features, how to use, settings, FAQ): click a title to open it.
@@ -44,6 +45,13 @@ There are no settings and no switches. Install it, and Tweakeroo's free camera h
 ### Find your character
 
 - **Triple-tap Ctrl.** Tap Sprint three times quickly in the free camera. For 5 seconds your character gets a cyan outline that shows through walls, and a cyan arrow on the crosshair ring points at it with the distance.
+
+### Using things from the free camera (1.21.11)
+
+- **Left and right click from the camera.** Tweakeroo normally ignores clicks in the free camera. Now you break, place, open and use whatever the camera's crosshair is on, as long as your character could reach it (the server measures the reach from your character); farther blocks are not targeted.
+- **Blocks face the camera's way.** Stairs, observers, pistons and other blocks that face a direction are placed as if your character looked the way the camera does; your character turns back right after.
+- **Buckets and other aimed items** hit the block the camera looks at.
+- **Sneak for one click.** Sneak moves the camera down, but holding it while you click sneaks your character for that click, so you can place blocks against chests and other blocks you could open.
 
 ### Toggle Sprint
 
@@ -243,6 +251,13 @@ Tweakeroo Freecam Plus is licensed under the GNU General Public License v3.0 (GP
 ### 找到本体
 
 - **连按三下 Ctrl。** 在灵魂出窍中快速连按三下疾跑键，接下来 5 秒内本体会显示一圈青色描边（可穿墙），准星周围也会出现一个青色箭头指向本体，并显示距离。
+
+### 在灵魂出窍里使用东西（1.21.11）
+
+- **左键、右键作用在相机看着的东西上。** Tweakeroo 本来在灵魂出窍时不响应点击；现在可以挖、放、打开、使用相机准星对着的东西，只要本体够得着（服务器按本体的位置算距离），够不着的不会被选中。
+- **方块按相机的方向放。** 楼梯、侦测器、活塞这些有朝向的方块，放下时就像本体看着相机的方向一样；放完本体马上转回去。
+- **桶之类自己瞄准的物品**会用在相机看着的方块上。
+- **按住潜行点一下就是潜行着点。** 潜行键在灵魂出窍里是让相机下降，但按住它点击时会替本体潜行这一下，可以对着箱子等能打开的方块放东西。
 
 ### 切换疾跑
 
