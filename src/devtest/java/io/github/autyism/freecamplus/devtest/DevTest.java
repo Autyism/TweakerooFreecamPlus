@@ -364,8 +364,10 @@ public class DevTest implements ClientModInitializer {
 			xaeroSteps();
 		}
 
-		//? if >=1.21.11 <26.1
+		//? if >=1.21.11 <26.1 {
 		interactSteps();
+		lockSteps();
+		//?}
 		run("summary and stop", client -> {
 			LOG.info("[DevTest] SUMMARY failures={}", failures);
 			LOG.info("[DevTest] DONE");
@@ -406,6 +408,7 @@ public class DevTest implements ClientModInitializer {
 
 	//? if >=1.21.11 <26.1 {
 	private net.minecraft.core.BlockPos stone;
+	private double flyY;
 	private float playerYaw;
 
 	/** A command run by the integrated server itself (the test world has no cheats for the player) */
@@ -483,6 +486,129 @@ public class DevTest implements ClientModInitializer {
 		check("out of the character's reach: no target", (client, t) -> client.hitResult == null || client.hitResult.getType() == net.minecraft.world.phys.HitResult.Type.MISS);
 		run("free camera off", client -> FeatureToggle.TWEAK_FREE_CAMERA.setBooleanValue(false));
 		waitTicks(10);
+	}
+	//?}
+
+	//? if >=1.21.11 <26.1 {
+	private static net.minecraft.world.level.block.state.BlockState placedAt(Minecraft client, net.minecraft.core.BlockPos pos) {
+		return client.level.getBlockState(pos);
+	}
+
+	private static boolean stairsFacing(Minecraft client, net.minecraft.core.BlockPos pos, net.minecraft.core.Direction facing) {
+		var s = placedAt(client, pos);
+		LOG.info("[DevTest] INFO at {}: {}", pos, s);
+		return s.is(net.minecraft.world.level.block.Blocks.OAK_STAIRS) && s.getValue(net.minecraft.world.level.block.StairBlock.FACING) == facing;
+	}
+
+	private static net.minecraft.server.level.ServerPlayer serverPlayer(Minecraft client) {
+		return client.getSingleplayerServer().getPlayerList().getPlayer(client.player.getUUID());
+	}
+
+	/** Ctrl + L (placing direction lock) and Ctrl + Right Shift (sneak lock) from the free camera */
+	private void lockSteps() {
+		run("locks: free camera off, three stones and a chest east of the character, stairs in hand", client -> {
+			FeatureToggle.TWEAK_FREE_CAMERA.setBooleanValue(false);
+			var p = client.player.blockPosition();
+			stone = p.east(2);
+			op(client, String.format("fill %d %d %d %d %d %d air", p.getX() + 1, p.getY(), p.getZ() - 2, p.getX() + 3, p.getY() + 3, p.getZ() + 2));
+			op(client, String.format("setblock %d %d %d stone", stone.getX(), stone.getY(), stone.getZ()));
+			op(client, String.format("setblock %d %d %d stone", stone.getX(), stone.getY(), stone.getZ() - 2));
+			op(client, String.format("setblock %d %d %d chest", stone.getX(), stone.getY(), stone.getZ() + 2));
+			op(client, "item replace entity @s weapon.mainhand with oak_stairs 16");
+			client.player.setYRot(-90F);
+			client.player.setXRot(0F);
+			playerYaw = -90F;
+		});
+		waitTicks(20);
+		run("free camera on", client -> FeatureToggle.TWEAK_FREE_CAMERA.setBooleanValue(true));
+		waitTicks(10);
+		run("camera south of the first stone, looking north at its top", client ->
+				aim(client, stone.getX() + 0.5, stone.getY() + 1.4, stone.getZ() + 2.6, net.minecraft.world.phys.Vec3.atCenterOf(stone).add(0, 0.5, 0)));
+		waitTicks(5);
+		run("right click", client -> KeyMapping.click(KeyBindingHelper.getBoundKeyOf(client.options.keyUse)));
+		waitTicks(10);
+		check("first stairs face the camera's way (north)", (client, t) -> stairsFacing(client, stone.above(), net.minecraft.core.Direction.NORTH));
+		run("lock the direction (the last placement's: north)", client -> io.github.autyism.freecamplus.FreecamInteract.toggleDirectionLock(client));
+		check("direction locked", (client, t) -> io.github.autyism.freecamplus.FreecamInteract.directionLocked());
+		run("camera west of the second stone, looking east at its top", client -> {
+			var second = stone.north(2);
+			aim(client, second.getX() - 1.6, second.getY() + 1.4, second.getZ() + 0.5, net.minecraft.world.phys.Vec3.atCenterOf(second).add(0, 0.5, 0));
+		});
+		waitTicks(5);
+		check("the camera looks east now", (client, t) -> client.hitResult instanceof net.minecraft.world.phys.BlockHitResult b
+				&& b.getBlockPos().equals(stone.north(2)) && Math.abs(net.minecraft.util.Mth.wrapDegrees(CameraEntity.getCamera().getYRot() + 90F)) < 20F);
+		run("right click", client -> KeyMapping.click(KeyBindingHelper.getBoundKeyOf(client.options.keyUse)));
+		waitTicks(10);
+		check("locked: second stairs face north, not the camera's east", (client, t) -> stairsFacing(client, stone.north(2).above(), net.minecraft.core.Direction.NORTH));
+		check("the character faces east again after the click", (client, t) -> Math.abs(net.minecraft.util.Mth.wrapDegrees(client.player.getYRot() - playerYaw)) < 1.0);
+		screenshot("30_direction_locked");
+		run("unlock, break the second stairs", client -> {
+			io.github.autyism.freecamplus.FreecamInteract.toggleDirectionLock(client);
+			var at = stone.north(2).above();
+			op(client, String.format("setblock %d %d %d air", at.getX(), at.getY(), at.getZ()));
+		});
+		waitTicks(5);
+		check("direction unlocked", (client, t) -> !io.github.autyism.freecamplus.FreecamInteract.directionLocked());
+		run("right click again (same camera, looking east)", client -> KeyMapping.click(KeyBindingHelper.getBoundKeyOf(client.options.keyUse)));
+		waitTicks(10);
+		check("unlocked: stairs face the camera's way again (east)", (client, t) -> stairsFacing(client, stone.north(2).above(), net.minecraft.core.Direction.EAST));
+
+		run("character flying a bit above the ground", client -> {
+			client.player.getAbilities().flying = true;
+			client.player.onUpdateAbilities();
+			client.player.setDeltaMovement(net.minecraft.world.phys.Vec3.ZERO);
+			client.player.setPos(client.player.getX(), client.player.getY() + 1.5, client.player.getZ());
+		});
+		waitTicks(20);
+		run("sneak lock on", client -> {
+			flyY = client.player.getY();
+			io.github.autyism.freecamplus.FreecamInteract.toggleSneakLock(client);
+		});
+		waitTicks(20);
+		check("sneak lock: the character does not crouch", (client, t) -> !client.player.isCrouching());
+		check("sneak lock: the server does not see the character sneaking", (client, t) -> !serverPlayer(client).isShiftKeyDown());
+		check("sneak lock: the flying character does not sink", (client, t) -> {
+			LOG.info("[DevTest] INFO flying y {} -> {}", flyY, client.player.getY());
+			return client.player.getAbilities().flying && Math.abs(client.player.getY() - flyY) < 0.01;
+		});
+		check("sneak lock: no screen opened and nothing placed by turning it on", (client, t) -> client.screen == null
+				&& placedAt(client, stone.south(2).above()).isAir());
+		run("camera south of the chest, looking north at its top", client -> {
+			var chest = stone.south(2);
+			aim(client, chest.getX() + 0.5, chest.getY() + 1.4, chest.getZ() + 2.6, net.minecraft.world.phys.Vec3.atCenterOf(chest).add(0, 0.4, 0));
+		});
+		waitTicks(5);
+		run("right click on the chest", client -> KeyMapping.click(KeyBindingHelper.getBoundKeyOf(client.options.keyUse)));
+		waitTicks(10);
+		check("sneaking: stairs placed on the chest, the chest did not open", (client, t) -> client.screen == null
+				&& placedAt(client, stone.south(2).above()).is(net.minecraft.world.level.block.Blocks.OAK_STAIRS));
+		check("after the sneaking click the character is not sneaking", (client, t) -> !serverPlayer(client).isShiftKeyDown() && !client.player.isCrouching());
+		check("the flying character still has not sunk", (client, t) -> Math.abs(client.player.getY() - flyY) < 0.01);
+		screenshot("31_sneak_locked");
+		run("sneak lock off", client -> io.github.autyism.freecamplus.FreecamInteract.toggleSneakLock(client));
+		waitTicks(10);
+		check("sneak lock off: the character stands up", (client, t) -> !client.player.isCrouching() && !serverPlayer(client).isShiftKeyDown());
+		run("break the stairs on the chest, right click the chest again", client -> {
+			var at = stone.south(2).above();
+			op(client, String.format("setblock %d %d %d air", at.getX(), at.getY(), at.getZ()));
+		});
+		waitTicks(5);
+		run("right click on the chest", client -> KeyMapping.click(KeyBindingHelper.getBoundKeyOf(client.options.keyUse)));
+		waitTicks(10);
+		check("not sneaking: the chest opens instead", (client, t) -> client.screen instanceof net.minecraft.client.gui.screens.inventory.ContainerScreen
+				&& placedAt(client, stone.south(2).above()).isAir());
+		run("close the chest, stop flying, both locks on, leave the free camera", client -> {
+			client.player.closeContainer();
+			client.player.getAbilities().flying = false;
+			client.player.onUpdateAbilities();
+			io.github.autyism.freecamplus.FreecamInteract.toggleDirectionLock(client);
+			io.github.autyism.freecamplus.FreecamInteract.toggleSneakLock(client);
+		});
+		waitTicks(3);
+		run("free camera off", client -> FeatureToggle.TWEAK_FREE_CAMERA.setBooleanValue(false));
+		waitTicks(10);
+		check("leaving the free camera ends both locks", (client, t) -> !io.github.autyism.freecamplus.FreecamInteract.directionLocked()
+				&& !io.github.autyism.freecamplus.FreecamInteract.sneakLocked() && !client.player.isCrouching());
 	}
 	//?}
 

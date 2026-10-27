@@ -10,7 +10,8 @@
 		"StickyKeyBindingMixin",
 		"TweakerooInputsMixin",
 		"FreecamPickMixin",
-		"FreecamUseMixin"${extra_mixins}
+		"FreecamUseMixin",
+		"SneakLockMixin"${extra_mixins}
 	],
 	"injectors": {
 		"defaultRequire": 1

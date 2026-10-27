@@ -42,6 +42,8 @@ import org.slf4j.LoggerFactory;
  * the world, arrows around the crosshair, removed when you walk up to them.</li>
  * <li>sprint key (Ctrl) + mouse wheel in the free camera changes the sprint speed
  * ({@link SprintSpeed}); a line at the top shows whether sprint is on and the current factor.</li>
+ * <li>(1.21.11) clicks from the free camera, the placing direction lock and the sneak lock: see
+ * {@link FreecamInteract} and {@link FreecamHotkeys}; the locks are shown under the sprint line.</li>
  * </ul>
  */
 public class FreecamPlus implements ClientModInitializer {
@@ -57,6 +59,7 @@ public class FreecamPlus implements ClientModInitializer {
 
 	@Override
 	public void onInitializeClient() {
+		FreecamHotkeys.register();
 		ClientTickEvents.START_CLIENT_TICK.register(FreecamPlus::onStartTick);
 		ClientTickEvents.END_CLIENT_TICK.register(FreecamPlus::onEndTick);
 		//? if >=26.1 {
@@ -186,8 +189,26 @@ public class FreecamPlus implements ClientModInitializer {
 			int width = client.font.width(text);
 			int x = (context.guiWidth() - width) / 2;
 			context.drawString(client.font, text, x, 4, on ? 0xFF55FF55 : 0xFFAAAAAA);
+			//? if >=1.21.11 <26.1
+			drawLocks(context, client);
 		}
 	}
+
+	//? if >=1.21.11 <26.1 {
+	/** Under the sprint line: the locked placing direction and the sneak lock, while they are on. */
+	private static void drawLocks(GuiGraphics context, Minecraft client) {
+		int y = 15;
+		if (FreecamInteract.directionLocked()) {
+			Component text = Component.translatable("freecamplus.lock.direction.hud", FreecamInteract.directionText());
+			context.drawString(client.font, text, (context.guiWidth() - client.font.width(text)) / 2, y, 0xFFFFAA00);
+			y += 11;
+		}
+		if (FreecamInteract.sneakLocked()) {
+			Component text = Component.translatable("freecamplus.lock.sneak.hud");
+			context.drawString(client.font, text, (context.guiWidth() - client.font.width(text)) / 2, y, 0xFFFFAA00);
+		}
+	}
+	//?}
 
 	/** One arrow per waypoint on a ring around the crosshair, with its number and distance. */
 	private static void drawMarkerArrows(GuiGraphics context, Minecraft client) {

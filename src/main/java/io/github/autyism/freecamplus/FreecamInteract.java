@@ -5,6 +5,8 @@ import fi.dy.masa.tweakeroo.util.CameraEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ServerboundMovePlayerPacket;
 import net.minecraft.network.protocol.game.ServerboundPlayerInputPacket;
 import net.minecraft.world.entity.Entity;
@@ -27,7 +29,14 @@ import net.minecraft.world.phys.Vec3;
  * looks at, so the server's aim lands on the same block.</li>
  * <li>Holding sneak (which moves the camera down) sneaks your character for that click: placing against chests and
  * other blocks you can open works like with sneak held.</li>
+ * <li>Ctrl + L locks the placing direction to the one of your last placement (the camera's, if nothing was placed
+ * yet in this free camera), so the camera can look around while blocks keep facing that way; pressed again, blocks
+ * follow the camera again.</li>
+ * <li>Ctrl + Right Shift locks sneak for clicks until pressed again: every click from the free camera is a sneaking
+ * click, as if sneak were held. Your character itself never sneaks (it does not crouch, and a flying character does
+ * not sink), and turning the lock on clicks nothing.</li>
  * </ul>
+ * Both locks end when you leave the free camera.
  */
 public final class FreecamInteract {
 	private FreecamInteract() {
@@ -40,6 +49,14 @@ public final class FreecamInteract {
 	private static int restoreIn = -1;
 	private static Input savedInput;
 	private static boolean sneakSent;
+	/** A click from the free camera is going on with sneak (the game's own click handling sees the character sneaking) */
+	private static boolean clickSneak;
+	/** Direction of the last placement from the free camera (for the direction lock) */
+	private static boolean hasLast;
+	private static float lastYaw, lastPitch;
+	private static boolean directionLocked;
+	private static float lockedYaw, lockedPitch;
+	private static boolean sneakLocked;
 
 	/** The free camera is on and the camera is not the character */
 	public static boolean active(Minecraft mc) {
@@ -66,12 +83,60 @@ public final class FreecamInteract {
 		return BlockHitResult.miss(at, net.minecraft.core.Direction.getApproximateNearest(look.x, look.y, look.z), BlockPos.containing(at));
 	}
 
-	/** Before placing or using on a block: the character faces the camera's way (and sneaks if sneak is held) */
+	/** Before placing or using on a block: the character faces the camera's way, or the locked one (and sneaks if sneak is held) */
 	public static void beginPlace(Minecraft mc) {
 		if (!active(mc)) return;
-		Entity camera = mc.getCameraEntity();
-		face(mc, camera.getYRot(), camera.getXRot());
+		if (directionLocked) {
+			face(mc, lockedYaw, lockedPitch);
+		} else {
+			Entity camera = mc.getCameraEntity();
+			face(mc, camera.getYRot(), camera.getXRot());
+			hasLast = true;
+			lastYaw = camera.getYRot();
+			lastPitch = camera.getXRot();
+		}
 		sneak(mc);
+	}
+
+	/** Ctrl + L in the free camera */
+	public static void toggleDirectionLock(Minecraft mc) {
+		if (directionLocked) {
+			directionLocked = false;
+			mc.gui.setOverlayMessage(Component.translatable("freecamplus.lock.direction.off"), false);
+			return;
+		}
+		Entity camera = mc.getCameraEntity();
+		lockedYaw = hasLast ? lastYaw : camera.getYRot();
+		lockedPitch = hasLast ? lastPitch : camera.getXRot();
+		directionLocked = true;
+		mc.gui.setOverlayMessage(Component.translatable("freecamplus.lock.direction.on", directionText()), false);
+	}
+
+	/** Ctrl + Right Shift in the free camera */
+	public static void toggleSneakLock(Minecraft mc) {
+		sneakLocked = !sneakLocked;
+		mc.gui.setOverlayMessage(Component.translatable(sneakLocked ? "freecamplus.lock.sneak.on" : "freecamplus.lock.sneak.off"), false);
+	}
+
+	public static boolean directionLocked() {
+		return directionLocked;
+	}
+
+	public static boolean sneakLocked() {
+		return sneakLocked;
+	}
+
+	/** The locked direction in words: the way blocks such as stairs face, and up / down for pistons and observers */
+	public static Component directionText() {
+		Component horizontal = Component.translatable("freecamplus.direction." + Direction.fromYRot(lockedYaw).getSerializedName());
+		if (lockedPitch > 45) return Component.translatable("freecamplus.direction.withVertical", horizontal, Component.translatable("freecamplus.direction.down"));
+		if (lockedPitch < -45) return Component.translatable("freecamplus.direction.withVertical", horizontal, Component.translatable("freecamplus.direction.up"));
+		return horizontal;
+	}
+
+	/** Your character counts as sneaking for the game's own handling of a sneaking click (only during that click) */
+	public static boolean sneakingFor(LocalPlayer player) {
+		return clickSneak && player == Minecraft.getInstance().player;
 	}
 
 	/** Before using an item that aims by itself: the character looks at the block the camera looks at */
@@ -96,6 +161,7 @@ public final class FreecamInteract {
 	public static void end(Minecraft mc) {
 		if (sneakSent) {
 			sneakSent = false;
+			clickSneak = false;
 			if (mc.player != null && savedInput != null) mc.player.connection.send(new ServerboundPlayerInputPacket(savedInput));
 			savedInput = null;
 		}
@@ -114,8 +180,13 @@ public final class FreecamInteract {
 		restoreIn = 1;
 	}
 
-	/** Every client tick: send the restored direction once the click went out */
+	/** Every client tick: send the restored direction once the click went out; the locks end with the free camera */
 	public static void tick(Minecraft mc) {
+		if (!active(mc) && (directionLocked || sneakLocked || hasLast)) {
+			directionLocked = false;
+			sneakLocked = false;
+			hasLast = false;
+		}
 		if (restoreIn < 0) return;
 		if (restoreIn-- > 0) return;
 		restoreIn = -1;
@@ -145,13 +216,18 @@ public final class FreecamInteract {
 		depth = 1;
 	}
 
+	/**
+	 * Sneak held or the sneak lock on: the server sees the character sneaking for this one click only (the input
+	 * before and after it, all within the same tick of the server, so the character never crouches or sinks).
+	 */
 	private static void sneak(Minecraft mc) {
 		LocalPlayer p = mc.player;
-		if (sneakSent || p.input == null || !mc.options.keyShift.isDown()) return;
-		savedInput = p.input.keyPresses;
-		Input s = savedInput;
-		p.connection.send(new ServerboundPlayerInputPacket(new Input(s.forward(), s.backward(), s.left(), s.right(), s.jump(), true, s.sprint())));
+		if (sneakSent || !(sneakLocked || mc.options.keyShift.isDown())) return;
+		// in the free camera Tweakeroo's still-standing input is what the server last got
+		savedInput = Input.EMPTY;
+		p.connection.send(new ServerboundPlayerInputPacket(new Input(false, false, false, false, false, true, false)));
 		sneakSent = true;
+		clickSneak = true;
 	}
 	//?}
 }

@@ -4,11 +4,13 @@
 
 - Left and right click work in Tweakeroo's free camera, on what the camera looks at, as long as your character could reach it.
 - Blocks placed from the free camera face the camera's way; buckets and other aimed items hit the camera's block; holding sneak while clicking sneaks your character for that click.
+- Ctrl + L locks the placing direction (the last placement's), Ctrl + Right Shift makes every click from the camera a sneaking click without your character sneaking; both hotkeys can be changed in the settings.
 
 ### 中文
 
 - 灵魂出窍时左键、右键可以用了，作用在相机看着的东西上（本体够得着的范围内）。
 - 在灵魂出窍里放的方块按相机的方向放；桶之类自己瞄准的物品用在相机看着的方块上；按住潜行点击时本体潜行这一下。
+- Ctrl + L 锁定放置方向（上一次放置的方向），Ctrl + 右 Shift 让镜头的每次点击都按潜行算，本体自己不潜行；两个热键都能在设置里改。
 
 ## 1.0.0+1.21.8 — 2026-10-22
 

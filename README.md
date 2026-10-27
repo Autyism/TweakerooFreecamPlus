@@ -52,6 +52,9 @@ There are no settings and no switches. Install it, and Tweakeroo's free camera h
 - **Blocks face the camera's way.** Stairs, observers, pistons and other blocks that face a direction are placed as if your character looked the way the camera does; your character turns back right after.
 - **Buckets and other aimed items** hit the block the camera looks at.
 - **Sneak for one click.** Sneak moves the camera down, but holding it while you click sneaks your character for that click, so you can place blocks against chests and other blocks you could open.
+- **Lock the placing direction (Ctrl + L).** Blocks keep the direction of your last placement (or the camera's, if you haven't placed yet) while the camera looks around. Press again to follow the camera again. The locked direction is shown under the sprint line.
+- **Lock sneak for clicks (Ctrl + Right Shift).** Every click from the camera is a sneaking click until you press it again. Your character itself never sneaks: it does not crouch, and a flying character does not sink.
+- **Both hotkeys can be changed** in the settings (Mod Menu → Tweakeroo Freecam Plus). They only act in the free camera; both locks end when you leave it.
 
 ### Toggle Sprint
 
@@ -258,6 +261,9 @@ Tweakeroo Freecam Plus is licensed under the GNU General Public License v3.0 (GP
 - **方块按相机的方向放。** 楼梯、侦测器、活塞这些有朝向的方块，放下时就像本体看着相机的方向一样；放完本体马上转回去。
 - **桶之类自己瞄准的物品**会用在相机看着的方块上。
 - **按住潜行点一下就是潜行着点。** 潜行键在灵魂出窍里是让相机下降，但按住它点击时会替本体潜行这一下，可以对着箱子等能打开的方块放东西。
+- **锁定放置方向（Ctrl + L）。** 方块一直按上一次放置的方向摆（还没放过就按镜头当前的方向），镜头可以随便转；再按一次恢复跟着镜头。锁定的方向显示在疾跑那行字下面。
+- **锁定潜行点击（Ctrl + 右 Shift）。** 再按一次之前，从镜头的每次点击都按潜行算。本体自己不会潜行：不会蹲下，飞着时也不会往下掉。
+- **两个热键都能改**（模组菜单 → Tweakeroo Freecam Plus 的设置）。只在灵魂出窍时起作用，退出灵魂出窍时两个锁定都会解除。
 
 ### 切换疾跑
 
