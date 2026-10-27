@@ -147,7 +147,7 @@ Each Minecraft version has its own jar, and each jar works with exactly one Twea
 | 1.21.5 | `tweakeroo-freecam-plus-1.0.0+1.21.5.jar` | 0.24.3 | 0.24.3 or newer within 0.24.x | 21 |
 | 1.21.6, 1.21.7, 1.21.8 | `tweakeroo-freecam-plus-1.0.0+1.21.8.jar` | 0.25.6 | 0.25.6 or newer within 0.25.x | 21 |
 | 1.21.9, 1.21.10 | `tweakeroo-freecam-plus-1.0.0+1.21.10.jar` | 0.26.5 | 0.26.4 or newer within 0.26.x | 21 |
-| 1.21.11 | `tweakeroo-freecam-plus-1.0.0.jar` | 0.27.15 | 0.27.19 or newer within 0.27.x | 21 |
+| 1.21.11 | `tweakeroo-freecam-plus-1.1.0+1.21.11.jar` | 0.27.15 | 0.27.19 or newer within 0.27.x | 21 |
 | 26.1, 26.1.1, 26.1.2 | `tweakeroo-freecam-plus-1.0.0+26.1.2.jar` | 0.28.10 | 0.28.11 or newer within 0.28.x | 25 |
 | 26.2 | `tweakeroo-freecam-plus-1.0.0+26.2.jar` | 0.29.5 | 0.29.5 or newer within 0.29.x | 25 |
 | 26.3 | `tweakeroo-freecam-plus-1.0.0+26.3.jar` | 0.30.1 | 0.30.2 or newer within 0.30.x | 25 |
@@ -356,7 +356,7 @@ Tweakeroo Freecam Plus is licensed under the GNU General Public License v3.0 (GP
 | 1.21.5 | `tweakeroo-freecam-plus-1.0.0+1.21.5.jar` | 0.24.3 | 0.24.3 及以上的 0.24.x | 21 |
 | 1.21.6、1.21.7、1.21.8 | `tweakeroo-freecam-plus-1.0.0+1.21.8.jar` | 0.25.6 | 0.25.6 及以上的 0.25.x | 21 |
 | 1.21.9、1.21.10 | `tweakeroo-freecam-plus-1.0.0+1.21.10.jar` | 0.26.5 | 0.26.4 及以上的 0.26.x | 21 |
-| 1.21.11 | `tweakeroo-freecam-plus-1.0.0.jar` | 0.27.15 | 0.27.19 及以上的 0.27.x | 21 |
+| 1.21.11 | `tweakeroo-freecam-plus-1.1.0+1.21.11.jar` | 0.27.15 | 0.27.19 及以上的 0.27.x | 21 |
 | 26.1、26.1.1、26.1.2 | `tweakeroo-freecam-plus-1.0.0+26.1.2.jar` | 0.28.10 | 0.28.11 及以上的 0.28.x | 25 |
 | 26.2 | `tweakeroo-freecam-plus-1.0.0+26.2.jar` | 0.29.5 | 0.29.5 及以上的 0.29.x | 25 |
 | 26.3 | `tweakeroo-freecam-plus-1.0.0+26.3.jar` | 0.30.1 | 0.30.2 及以上的 0.30.x | 25 |
