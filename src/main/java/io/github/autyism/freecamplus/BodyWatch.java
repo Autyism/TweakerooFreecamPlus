@@ -28,6 +28,7 @@ public final class BodyWatch {
 			lastHurtTime = 0;
 			return;
 		}
+		tickTemporary();
 		if (pending) {
 			pending = false;
 			alert(client);
@@ -37,6 +38,44 @@ public final class BodyWatch {
 		lastHurtTime = hurt;
 		if (newHit && CameraEntity.getCamera() != null) {
 			pending = true;
+		}
+	}
+
+	/** Waypoint left where the camera was when the free camera was switched off because of a hit. */
+	private static Markers.Marker temporary;
+	/** The free camera was seen off since the temporary waypoint was set (so switching it on again removes it). */
+	private static boolean seenOff;
+
+	/** Switches the free camera off and leaves a temporary waypoint where the camera was. */
+	static void leave(Minecraft client) {
+		CameraEntity camera = CameraEntity.getCamera();
+		if (camera != null && client.level != null) {
+			if (temporary != null) Markers.remove(temporary);
+			temporary = Markers.add(client.level.dimension().identifier().toString(), camera.blockPosition());
+			seenOff = false;
+		}
+		fi.dy.masa.tweakeroo.config.FeatureToggle.TWEAK_FREE_CAMERA.setBooleanValue(false);
+	}
+
+	/** For the dev test. */
+	public static Markers.Marker temporary() {
+		return temporary;
+	}
+
+	private static void tickTemporary() {
+		if (temporary == null) return;
+		if (!Markers.list().contains(temporary)) {
+			// walked up to it (or removed by hand)
+			temporary = null;
+			return;
+		}
+		boolean on = CameraEntity.getCamera() != null;
+		if (!on) {
+			seenOff = true;
+		} else if (seenOff) {
+			// the free camera is on again: not needed any more
+			Markers.remove(temporary);
+			temporary = null;
 		}
 	}
 
@@ -52,6 +91,6 @@ public final class BodyWatch {
 				.withStyle(ChatFormatting.RED, ChatFormatting.BOLD), false);
 		client.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.NOTE_BLOCK_BELL.value(), 1.4F, 1.0F));
 		//? if >=1.21.11 <26.1
-		if (FreecamHotkeys.LEAVE_WHEN_HURT.getBooleanValue()) fi.dy.masa.tweakeroo.config.FeatureToggle.TWEAK_FREE_CAMERA.setBooleanValue(false);
+		if (FreecamHotkeys.LEAVE_WHEN_HURT.getBooleanValue()) leave(client);
 	}
 }

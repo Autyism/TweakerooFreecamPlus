@@ -215,11 +215,22 @@ public class DevTest implements ClientModInitializer {
 		waitTicks(3);
 		run("let go of Shift", client -> client.options.keyShift.setDown(false));
 		check("sharing keeps the waypoint (not removed)", (client, t) -> Markers.list().size() == 2);
-		run("someone shares a waypoint", client -> op(client,
-				"tellraw @s \"<Steve> [Waypoint #4] 123 70 -45 minecraft:overworld\""));
+		check("shared in Xaero's format (Conflux Map reads it too)", (client, t) -> io.github.autyism.freecamplus.SharedWaypoints.message(Markers.list().get(1))
+				.matches("xaero-waypoint:Waypoint \\d+:\\d+:-?\\d+:-?\\d+:-?\\d+:13:false:0:Internal-overworld-waypoints"));
+		run("someone shares a Nether waypoint with Conflux Map", client -> op(client,
+				"tellraw @s \"<Alex> [Conflux Map] Base | minecraft:the_nether | X: 10.5, Y: 70, Z: -5\""));
+		waitTicks(10);
+		check("Conflux Map's format is offered, in the Nether", (client, t) ->
+				"/fcpwaypoint 10 70 -5 minecraft:the_nether".equals(io.github.autyism.freecamplus.SharedWaypoints.lastOffer));
+		run("someone shares a waypoint with Xaero's Minimap", client -> op(client,
+				"tellraw @s \"<Steve> xaero-waypoint:Farm:F:123:70:-45:6:false:0:Internal-overworld-waypoints\""));
 		waitTicks(10);
 		check("an [Add waypoint] line is offered", (client, t) ->
 				"/fcpwaypoint 123 70 -45 minecraft:overworld".equals(io.github.autyism.freecamplus.SharedWaypoints.lastOffer));
+		check("Xaero's dimension names both ways", (client, t) -> "minecraft:the_end".equals(io.github.autyism.freecamplus.SharedWaypoints.fromXaeroDimension(
+				io.github.autyism.freecamplus.SharedWaypoints.xaeroDimension("minecraft:the_end"), "x"))
+				&& "mymod:deep/caves".equals(io.github.autyism.freecamplus.SharedWaypoints.fromXaeroDimension(
+				io.github.autyism.freecamplus.SharedWaypoints.xaeroDimension("mymod:deep/caves"), "x")));
 		screenshot("04b_shared_waypoint_offer");
 		run("click [Add waypoint] (the command the click runs)", client ->
 				//? if >=1.21.6 {
@@ -233,6 +244,9 @@ public class DevTest implements ClientModInitializer {
 				.filter(m -> m.pos().getX() == 123).forEach(Markers::remove));
 		waitTicks(2);
 		check("two waypoints again", (client, t) -> Markers.list().size() == 2);
+		run("list all waypoints", client -> client.player.connection.sendCommand("fcpwaypoint list"));
+		waitTicks(5);
+		screenshot("04d_waypoint_list");
 	}
 
 	private int alertsBefore;
@@ -250,6 +264,24 @@ public class DevTest implements ClientModInitializer {
 		check("the hurt alert was shown", (client, t) -> io.github.autyism.freecamplus.BodyWatch.alerts == alertsBefore + 1);
 		screenshot("04c_hurt_alert");
 		check("the free camera stays on (Leave When Hurt is off by default)", (client, t) -> CameraEntity.getCamera() != null);
+		//? if >=1.21.11 <26.1 {
+		run("Leave When Hurt on, hit again", client -> {
+			io.github.autyism.freecamplus.FreecamHotkeys.LEAVE_WHEN_HURT.setBooleanValue(true);
+			markersBefore = Markers.list().size();
+			op(client, "damage @s 2 minecraft:generic");
+		});
+		waitTicks(25);
+		check("the free camera was left, a temporary waypoint marks where the camera was", (client, t) -> CameraEntity.getCamera() == null
+				&& io.github.autyism.freecamplus.BodyWatch.temporary() != null && Markers.list().size() == markersBefore + 1);
+		screenshot("04e_left_with_temporary_waypoint");
+		run("free camera on again", client -> {
+			io.github.autyism.freecamplus.FreecamHotkeys.LEAVE_WHEN_HURT.setBooleanValue(false);
+			FeatureToggle.TWEAK_FREE_CAMERA.setBooleanValue(true);
+		});
+		waitTicks(5);
+		check("entering the free camera again removes the temporary waypoint", (client, t) -> CameraEntity.getCamera() != null
+				&& io.github.autyism.freecamplus.BodyWatch.temporary() == null && Markers.list().size() == markersBefore);
+		//?}
 		run("game mode and health back", client -> {
 			op(client, "effect give @s minecraft:instant_health 1 5");
 			op(client, "gamemode " + gameModeBefore + " @s");

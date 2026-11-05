@@ -33,8 +33,12 @@
 	"freecamplus.hurt": "Your character is being hurt! Health: %s hearts",
 	"freecamplus.share.sent": "Waypoint %s said in chat",
 	"freecamplus.share.add": "[Add waypoint]",
-	"freecamplus.share.add.hover": "Add %s %s %s to your waypoints",
+	"freecamplus.share.add.hover": "Add %s %s %s (%s) to your waypoints",
 	"freecamplus.config.name.leaveWhenHurt": "Leave When Hurt",
 	"freecamplus.config.prettyName.leaveWhenHurt": "Leave When Hurt",
-	"freecamplus.config.comment.leaveWhenHurt": "When your character gets hurt while you are in the free camera, the free camera is switched off (you always get a bell and a red line). Off by default."
+	"freecamplus.config.comment.leaveWhenHurt": "When your character gets hurt while you are in the free camera, the free camera is switched off (you always get a bell and a red line). Off by default.",
+	"freecamplus.list.title": "Waypoints (all dimensions):",
+	"freecamplus.list.empty": "No waypoints yet",
+	"freecamplus.list.share": "[Share]",
+	"freecamplus.list.remove": "[Remove]"
 }

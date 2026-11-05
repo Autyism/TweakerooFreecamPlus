@@ -33,8 +33,12 @@
 	"freecamplus.hurt": "你的角色在挨打！血量：%s 颗心",
 	"freecamplus.share.sent": "路标 %s 已发到聊天栏",
 	"freecamplus.share.add": "[添加路标]",
-	"freecamplus.share.add.hover": "把 %s %s %s 加到你的路标",
+	"freecamplus.share.add.hover": "把 %s %s %s（%s）加到你的路标",
 	"freecamplus.config.name.leaveWhenHurt": "挨打时退出灵魂出窍",
 	"freecamplus.config.prettyName.leaveWhenHurt": "挨打时退出灵魂出窍",
-	"freecamplus.config.comment.leaveWhenHurt": "灵魂出窍时你的角色受伤，就自动关掉灵魂出窍（不管开没开，都会响铃并出一行红字提醒）。默认关。"
+	"freecamplus.config.comment.leaveWhenHurt": "灵魂出窍时你的角色受伤，就自动关掉灵魂出窍（不管开没开，都会响铃并出一行红字提醒）。默认关。",
+	"freecamplus.list.title": "路标（所有维度）：",
+	"freecamplus.list.empty": "还没有路标",
+	"freecamplus.list.share": "[分享]",
+	"freecamplus.list.remove": "[删除]"
 }

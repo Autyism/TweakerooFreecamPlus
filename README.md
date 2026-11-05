@@ -30,7 +30,7 @@ There are no settings and no switches. Install it, and Tweakeroo's free camera h
 
 - **Set a waypoint with the middle mouse button.** While the free camera is on, press the Pick Block key (middle mouse button by default) to put a waypoint on the block under your crosshair, up to 256 blocks away. If no block is in reach, for example when you look at the sky, the waypoint goes where the camera is. The action bar confirms it with the waypoint's number and coordinates.
 - **Remove it the same way.** Middle-click while looking at a waypoint, or very close to it, to remove it again.
-- **Share it.** Shift + middle click on a waypoint says it in chat; players with this mod get an **[Add waypoint]** to click.
+- **Share it.** Shift + middle click on a waypoint (or /fcpwaypoint list for all dimensions) says it in chat in Xaero's Minimap format; Xaero's Minimap and Conflux Map users can add it, and waypoints they share get an **[Add waypoint]** for you.
 - **Visible through walls.** Every waypoint is drawn as a pink box around its block with a beam rising 24 blocks above it. Both show through terrain, in the free camera and in your normal view.
 - **Arrows lead the way.** Small arrows on a ring around your crosshair point towards each waypoint, labelled with its number and distance in blocks. A tag tells you when it is more than 3 blocks above or below you. The arrows stay after you leave the free camera, so you can walk to the spot you scouted.
 - **Cleared on arrival.** A waypoint disappears by itself once your character is within 3 blocks of it.
@@ -241,7 +241,7 @@ Tweakeroo Freecam Plus is licensed under the GNU General Public License v3.0 (GP
 
 - **中键打标记。** 灵魂出窍时按「选取方块」键（默认鼠标中键），会在准星对着的方块上打一个标记，最远 256 格。如果够不到任何方块（比如对着天空），标记就打在视角当前所在的位置。动作栏会显示标记的编号和坐标。
 - **再按一次取消。** 对着已有的标记（或离它很近的地方）再按一次中键，就会取消这个标记。
-- **分享给别人。** 对着标记按 Shift + 中键，会把它发到聊天栏；装了这个模组的人点一下 **[添加路标]** 就能加上。
+- **分享给别人。** 对着标记按 Shift + 中键（或者 /fcpwaypoint list 列出所有维度），用 Xaero 小地图的格式发到聊天栏；装了 Xaero 小地图或 Conflux 地图的人能直接加，他们分享的路标下面也会给你一个 **[添加路标]**。
 - **穿墙可见。** 每个标记都会在方块外画一个粉色方框，并向上升起一道 24 格高的光柱。两者都能穿墙显示，灵魂出窍和正常视角下都看得到。
 - **箭头指路。** 准星周围有一圈小箭头，分别指向每个标记，并标出编号和距离（格）。标记比你高或低超过 3 格时，还会注明「上方」或「下方」。退出灵魂出窍后箭头依然显示，方便你走到刚才看好的地方。
 - **走到就自动清除。** 本体走到离标记 3 格以内时，这个标记会自动消失。
