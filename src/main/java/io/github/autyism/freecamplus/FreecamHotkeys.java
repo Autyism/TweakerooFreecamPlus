@@ -7,6 +7,7 @@ import fi.dy.masa.malilib.config.ConfigManager;
 import fi.dy.masa.malilib.config.ConfigUtils;
 import fi.dy.masa.malilib.config.IConfigBase;
 import fi.dy.masa.malilib.config.IConfigHandler;
+import fi.dy.masa.malilib.config.options.ConfigBoolean;
 import fi.dy.masa.malilib.config.options.ConfigHotkey;
 import fi.dy.masa.malilib.event.InitializationHandler;
 import fi.dy.masa.malilib.event.InputEventHandler;
@@ -45,6 +46,9 @@ public final class FreecamHotkeys {
 	public static final ConfigHotkey LOCK_DIRECTION = new ConfigHotkey("lockDirection", "LEFT_CONTROL,L", KeybindSettings.PRESS_ALLOWEXTRA, "").apply(PREFIX);
 	public static final ConfigHotkey LOCK_SNEAK = new ConfigHotkey("lockSneak", "LEFT_CONTROL,RIGHT_SHIFT", KeybindSettings.PRESS_ALLOWEXTRA, "").apply(PREFIX);
 	public static final List<ConfigHotkey> HOTKEYS = List.of(LOCK_DIRECTION, LOCK_SNEAK);
+	// your character gets hurt while you are in the free camera: switch the free camera off
+	public static final ConfigBoolean LEAVE_WHEN_HURT = new ConfigBoolean("leaveWhenHurt", false, "").apply(PREFIX);
+	public static final List<ConfigBoolean> GENERIC = List.of(LEAVE_WHEN_HURT);
 
 	public static void register() {
 		InitializationHandler.getInstance().registerInitializationHandler(() -> {
@@ -87,13 +91,17 @@ public final class FreecamHotkeys {
 		public void load() {
 			if (!Files.isRegularFile(FILE)) return;
 			JsonElement element = JsonUtils.parseJsonFile(FILE);
-			if (element != null && element.isJsonObject()) ConfigUtils.readConfigBase(element.getAsJsonObject(), "Hotkeys", HOTKEYS);
+			if (element != null && element.isJsonObject()) {
+				ConfigUtils.readConfigBase(element.getAsJsonObject(), "Hotkeys", HOTKEYS);
+				ConfigUtils.readConfigBase(element.getAsJsonObject(), "Generic", GENERIC);
+			}
 		}
 
 		@Override
 		public void save() {
 			JsonObject root = new JsonObject();
 			ConfigUtils.writeConfigBase(root, "Hotkeys", HOTKEYS);
+			ConfigUtils.writeConfigBase(root, "Generic", GENERIC);
 			JsonUtils.writeJsonToFile(root, FILE);
 		}
 	}
@@ -105,7 +113,8 @@ public final class FreecamHotkeys {
 
 		@Override
 		public List<ConfigOptionWrapper> getConfigs() {
-			List<? extends IConfigBase> options = HOTKEYS;
+			List<IConfigBase> options = new java.util.ArrayList<>(GENERIC);
+			options.addAll(HOTKEYS);
 			return ConfigOptionWrapper.createFor(options);
 		}
 	}

@@ -29,5 +29,12 @@
 	"freecamplus.config.prettyName.lockSneak": "Lock sneak",
 	"freecamplus.config.comment.lockSneak": "In the free camera: every click from the camera is a sneaking click (placing against chests and other blocks you can open places instead of opening them) until you press it again. Your character itself does not sneak: it does not crouch and does not sink while flying, and turning it on clicks nothing.",
 	"modmenu.nameTranslation.tweakeroo_freecam_plus": "Tweakeroo Freecam Plus",
-	"modmenu.descriptionTranslation.tweakeroo_freecam_plus": "Adds waypoints, an adjustable sprint speed and a pointer back to your character to Tweakeroo's free camera. Middle-click sets or removes a waypoint, Ctrl + mouse wheel changes the sprint speed, and a triple tap on Ctrl points at your character."
+	"modmenu.descriptionTranslation.tweakeroo_freecam_plus": "Adds waypoints, an adjustable sprint speed and a pointer back to your character to Tweakeroo's free camera. Middle-click sets or removes a waypoint, Ctrl + mouse wheel changes the sprint speed, and a triple tap on Ctrl points at your character.",
+	"freecamplus.hurt": "Your character is being hurt! Health: %s hearts",
+	"freecamplus.share.sent": "Waypoint %s said in chat",
+	"freecamplus.share.add": "[Add waypoint]",
+	"freecamplus.share.add.hover": "Add %s %s %s to your waypoints",
+	"freecamplus.config.name.leaveWhenHurt": "Leave When Hurt",
+	"freecamplus.config.prettyName.leaveWhenHurt": "Leave When Hurt",
+	"freecamplus.config.comment.leaveWhenHurt": "When your character gets hurt while you are in the free camera, the free camera is switched off (you always get a bell and a red line). Off by default."
 }

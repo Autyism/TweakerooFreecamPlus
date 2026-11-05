@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.2.0 — 2026-11-05
+
+For Minecraft 1.21.5–26.3 (the clicks from the camera and the two locks of 1.1.0 stay 1.21.11 only).
+
+- Your character gets hurt while you are in the free camera: a bell and a red line with its health. On 1.21.11 the new setting **Leave When Hurt** (off by default) also switches the free camera off.
+- Share a waypoint: Shift + middle click on it says it in chat (`[Waypoint #3] x y z dimension`). Anyone can read it; players with this mod get an **[Add waypoint]** under it, one click adds it to their waypoints.
+
+### 中文
+
+适用于 Minecraft 1.21.5–26.3（1.1.0 的镜头点击和两个锁定仍然只有 1.21.11 有）。
+
+- 灵魂出窍时你的角色挨打：会响铃，并出一行红字写着剩多少血。1.21.11 上新设置 **挨打时退出灵魂出窍**（默认关）还会顺便关掉灵魂出窍。
+- 分享路标：对着路标 Shift + 中键，会把它发到聊天栏（`[Waypoint #3] x y z 维度`）。谁都看得懂；装了这个模组的人下面会多一个 **[添加路标]**，点一下就加到自己的路标里。
+
 ## 1.1.0+1.21.11 — 2026-10-27
 
 - Left and right click work in Tweakeroo's free camera, on what the camera looks at, as long as your character could reach it.

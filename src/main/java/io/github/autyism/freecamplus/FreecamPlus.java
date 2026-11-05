@@ -60,6 +60,7 @@ public class FreecamPlus implements ClientModInitializer {
 	@Override
 	public void onInitializeClient() {
 		FreecamHotkeys.register();
+		SharedWaypoints.register();
 		ClientTickEvents.START_CLIENT_TICK.register(FreecamPlus::onStartTick);
 		ClientTickEvents.END_CLIENT_TICK.register(FreecamPlus::onEndTick);
 		//? if >=26.1 {
@@ -95,6 +96,8 @@ public class FreecamPlus implements ClientModInitializer {
 		//? if >=1.21.11 <26.1
 		FreecamInteract.tick(client);
 		Markers.sync(client);
+		BodyWatch.tick(client);
+		SharedWaypoints.tick(client);
 		if (client.player != null && client.level != null && !Markers.list().isEmpty()) {
 			Markers.removeArrived(dimension(client), client.player.blockPosition());
 		}
@@ -134,6 +137,11 @@ public class FreecamPlus implements ClientModInitializer {
 				bestAngle = angle;
 				best = marker;
 			}
+		}
+		if (best != null && client.options.keyShift.isDown()) {
+			// Shift + middle click: say it in chat for the others
+			SharedWaypoints.share(client, best);
+			return;
 		}
 		if (best != null) {
 			Markers.remove(best);

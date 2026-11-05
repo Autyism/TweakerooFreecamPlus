@@ -29,5 +29,12 @@
 	"freecamplus.config.prettyName.lockSneak": "锁定潜行",
 	"freecamplus.config.comment.lockSneak": "灵魂出窍时：从镜头点击都按潜行算（对着箱子等能打开的方块会放上去而不是打开），再按一次取消。本体自己不会潜行：不会蹲下，飞着时也不会往下掉；打开时不会点任何东西。",
 	"modmenu.nameTranslation.tweakeroo_freecam_plus": "Tweakeroo 灵魂出窍增强",
-	"modmenu.descriptionTranslation.tweakeroo_freecam_plus": "为 Tweakeroo 的灵魂出窍加入标记点、可调的疾跑速度和指回本体的箭头：中键打标记或取消标记，按住 Ctrl 滚动滚轮调节疾跑速度，连按三下 Ctrl 指向本体。"
+	"modmenu.descriptionTranslation.tweakeroo_freecam_plus": "为 Tweakeroo 的灵魂出窍加入标记点、可调的疾跑速度和指回本体的箭头：中键打标记或取消标记，按住 Ctrl 滚动滚轮调节疾跑速度，连按三下 Ctrl 指向本体。",
+	"freecamplus.hurt": "你的角色在挨打！血量：%s 颗心",
+	"freecamplus.share.sent": "路标 %s 已发到聊天栏",
+	"freecamplus.share.add": "[添加路标]",
+	"freecamplus.share.add.hover": "把 %s %s %s 加到你的路标",
+	"freecamplus.config.name.leaveWhenHurt": "挨打时退出灵魂出窍",
+	"freecamplus.config.prettyName.leaveWhenHurt": "挨打时退出灵魂出窍",
+	"freecamplus.config.comment.leaveWhenHurt": "灵魂出窍时你的角色受伤，就自动关掉灵魂出窍（不管开没开，都会响铃并出一行红字提醒）。默认关。"
 }

@@ -206,6 +206,57 @@ public class DevTest implements ClientModInitializer {
 		return CameraEntity.getCamera().position();
 	}
 
+	/** Shift + middle click shares a waypoint in chat; a shared one from someone else can be added with a click. */
+	private void sharedWaypointSteps() {
+		run("Shift + middle click on the second waypoint", client -> {
+			client.options.keyShift.setDown(true);
+			middleClick(client);
+		});
+		waitTicks(3);
+		run("let go of Shift", client -> client.options.keyShift.setDown(false));
+		check("sharing keeps the waypoint (not removed)", (client, t) -> Markers.list().size() == 2);
+		run("someone shares a waypoint", client -> op(client,
+				"tellraw @s \"<Steve> [Waypoint #4] 123 70 -45 minecraft:overworld\""));
+		waitTicks(10);
+		check("an [Add waypoint] line is offered", (client, t) ->
+				"/fcpwaypoint 123 70 -45 minecraft:overworld".equals(io.github.autyism.freecamplus.SharedWaypoints.lastOffer));
+		screenshot("04b_shared_waypoint_offer");
+		run("click [Add waypoint] (the command the click runs)", client ->
+				//? if >=1.21.6 {
+				client.player.connection.sendUnattendedCommand(io.github.autyism.freecamplus.SharedWaypoints.lastOffer.substring(1), null));
+				//?} else
+				/*client.player.connection.sendCommand(io.github.autyism.freecamplus.SharedWaypoints.lastOffer.substring(1)));*/
+		waitTicks(5);
+		check("the shared waypoint was added", (client, t) -> Markers.list().stream()
+				.anyMatch(m -> m.pos().equals(new net.minecraft.core.BlockPos(123, 70, -45)) && m.dimension().equals("minecraft:overworld")));
+		run("remove the shared waypoint again", client -> new ArrayList<>(Markers.list()).stream()
+				.filter(m -> m.pos().getX() == 123).forEach(Markers::remove));
+		waitTicks(2);
+		check("two waypoints again", (client, t) -> Markers.list().size() == 2);
+	}
+
+	private int alertsBefore;
+	private String gameModeBefore = "creative";
+
+	/** Getting hurt in the free camera rings a bell and shows a red line. */
+	private void hurtSteps() {
+		run("survival, then 2 damage to the body", client -> {
+			alertsBefore = io.github.autyism.freecamplus.BodyWatch.alerts;
+			gameModeBefore = client.gameMode.getPlayerMode().getName();
+			op(client, "gamemode survival @s");
+			op(client, "damage @s 2 minecraft:generic");
+		});
+		waitTicks(10);
+		check("the hurt alert was shown", (client, t) -> io.github.autyism.freecamplus.BodyWatch.alerts == alertsBefore + 1);
+		screenshot("04c_hurt_alert");
+		check("the free camera stays on (Leave When Hurt is off by default)", (client, t) -> CameraEntity.getCamera() != null);
+		run("game mode and health back", client -> {
+			op(client, "effect give @s minecraft:instant_health 1 5");
+			op(client, "gamemode " + gameModeBefore + " @s");
+		});
+		waitTicks(5);
+	}
+
 	private static void middleClick(Minecraft client) {
 		var camera = client.gameRenderer.getMainCamera();
 		LOG.info("[DevTest] INFO middle click: camera at {} yaw {} pitch {}, waypoints before: {}", camera.position(), camera.yRot(), camera.xRot(), Markers.list());
@@ -330,6 +381,8 @@ public class DevTest implements ClientModInitializer {
 		run("middle click", DevTest::middleClick);
 		waitTicks(3);
 		check("two waypoints", (client, t) -> Markers.list().size() == 2);
+		sharedWaypointSteps();
+		hurtSteps();
 
 		selfPointerSteps();
 		flickerSteps();
