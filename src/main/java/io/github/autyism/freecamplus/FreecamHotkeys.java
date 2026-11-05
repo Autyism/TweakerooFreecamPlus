@@ -112,6 +112,14 @@ public final class FreecamHotkeys {
 		}
 
 		@Override
+		public void initGui() {
+			super.initGui();
+			fi.dy.masa.malilib.gui.button.ButtonGeneric manual = new fi.dy.masa.malilib.gui.button.ButtonGeneric(this.getScreenWidth() - 80, 6, 70, 20,
+					"§6" + fi.dy.masa.malilib.util.StringUtils.translate("tweakeroo_freecam_plus.manual.button"));
+			this.addButton(manual, (b, mouseButton) -> fi.dy.masa.malilib.gui.GuiBase.openGui(new ManualScreen(this)));
+		}
+
+		@Override
 		public List<ConfigOptionWrapper> getConfigs() {
 			List<IConfigBase> options = new java.util.ArrayList<>(GENERIC);
 			options.addAll(HOTKEYS);

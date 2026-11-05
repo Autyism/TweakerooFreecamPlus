@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.2.1 — 2026-11-05
+
+- New: a **Manual** button in the settings opens a detailed manual in the game (English / 简体中文, follows the game language): every feature, where it works and where to set it, with a search box.
+- Versions without a settings screen open it with /fcpmanual.
+
+### 中文
+
+- 新增：设置界面里的 **说明书** 按钮，在游戏里打开一份详细说明（中英文跟着游戏语言）：每个功能做什么、在哪里生效、在哪里设置，带搜索框。
+- 没有设置界面的版本用 /fcpmanual 打开。
+
 ## 1.2.0 — 2026-11-05
 
 For Minecraft 1.21.5–26.3 (the clicks from the camera and the two locks of 1.1.0 stay 1.21.11 only).

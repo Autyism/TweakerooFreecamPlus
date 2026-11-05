@@ -15,13 +15,13 @@
 - Hold Ctrl and scroll to fly faster or slower (x1 to x64).
 - Tap Ctrl three times to see where your character is.
 - Left and right click work on what the camera looks at (within your character's reach); placed blocks face the camera's way (Minecraft 1.21.11).
-- No settings, client-side only. Needs Tweakeroo: the table under Requirements shows which version for your Minecraft.
+- Client-side only, works as soon as it is installed. Needs Tweakeroo: the table under Requirements shows which version for your Minecraft.
 
 Everything else is in the folded sections below (features, how to use, settings, FAQ): click a title to open it.
 
 A small client-side add-on for the **Free Camera** of [Tweakeroo](https://modrinth.com/mod/tweakeroo). Scout a spot with the free camera, mark it with the middle mouse button, and let arrows lead you there once you are back in your body. Hold Ctrl and scroll to fly faster or slower, and tap Ctrl three times when you lose track of where you left your character.
 
-There are no settings and no switches. Install it, and Tweakeroo's free camera has these extras.
+Install it, and Tweakeroo's free camera has these extras. On 1.21.11 a small settings screen (Mod Menu) adds two lock keys and "Leave When Hurt".
 
 <details>
 <summary><b>Features</b> (click to open)</summary>
@@ -90,7 +90,7 @@ Two scrolls up with Ctrl held: the sprint speed is now x6.
 <details>
 <summary><b>How to use</b> (click to open)</summary>
 
-The mod adds no key bindings, commands or settings screen of its own. It uses two vanilla keys, and only while Tweakeroo's free camera is on:
+Besides `/fcpwaypoint` (list, share and remove waypoints) and `/fcpmanual` (the in-game manual), the mod uses two vanilla keys, only while Tweakeroo's free camera is on:
 
 | Action | Default key | Where to change it |
 |---|---|---|
@@ -125,7 +125,7 @@ In the free camera, tap Ctrl three times within about 0.7 seconds. For 5 seconds
 <details>
 <summary><b>Settings</b> (click to open)</summary>
 
-There is nothing to configure: no options screen and no config file. For reference, these are the fixed values the mod uses:
+On 1.21.11, Mod Menu → Tweakeroo Freecam Plus has three settings: **Leave When Hurt** (off), **Lock placing direction** (Left Ctrl + L) and **Lock sneak** (Left Ctrl + Right Shift); the screen also opens the manual. Other versions have no settings. These are the fixed values the mod uses:
 
 | Name | Value | What it does |
 |---|---|---|
@@ -226,13 +226,13 @@ Tweakeroo Freecam Plus is licensed under the GNU General Public License v3.0 (GP
 - 在 Tweakeroo 的灵魂出窍里按鼠标中键给方块打标记，回到本体后跟着箭头走过去。
 - 按住 Ctrl 滚滚轮，飞得更快或更慢（x1 到 x64）。
 - 连按三下 Ctrl，看本体在哪儿。
-- 不用设置，纯客户端。需要 Tweakeroo，你的 Minecraft 版本配哪个 Tweakeroo 见「前置与运行环境」里的表。
+- 纯客户端，装上就能用。需要 Tweakeroo，你的 Minecraft 版本配哪个 Tweakeroo 见「前置与运行环境」里的表。
 
 详细说明都在下面折叠起来的部分（功能、使用方法、设置、常见问题），点标题就能展开。
 
 一个纯客户端的小附属模组，用来增强 [Tweakeroo](https://modrinth.com/mod/tweakeroo) 的「灵魂出窍」（Free Camera，自由视角）。先用灵魂出窍飞过去看好位置，按鼠标中键打个标记，回到本体后跟着准星周围的箭头走过去就行。按住 Ctrl 滚动滚轮可以飞得更快或更慢；忘了本体停在哪儿，就连按三下 Ctrl。
 
-没有任何设置和开关，装上之后 Tweakeroo 的灵魂出窍就带有这些功能。
+装上之后 Tweakeroo 的灵魂出窍就带有这些功能。1.21.11 另有一个小设置界面（模组菜单），里面是两个锁定键和“挨打时退出灵魂出窍”。
 
 <details>
 <summary><b>功能</b>（点开查看）</summary>
@@ -301,7 +301,7 @@ Tweakeroo Freecam Plus is licensed under the GNU General Public License v3.0 (GP
 <details>
 <summary><b>使用方法</b>（点开查看）</summary>
 
-本模组没有自己的键位、命令或设置界面。它只借用两个原版按键，而且只在 Tweakeroo 的灵魂出窍开启时生效：
+除了 `/fcpwaypoint`（列出、分享、删除路标）和 `/fcpmanual`（游戏内说明书）两个命令，本模组只借用两个原版按键，而且只在 Tweakeroo 的灵魂出窍开启时生效：
 
 | 操作 | 默认按键 | 修改位置 |
 |---|---|---|
@@ -336,7 +336,7 @@ Tweakeroo Freecam Plus is licensed under the GNU General Public License v3.0 (GP
 <details>
 <summary><b>设置</b>（点开查看）</summary>
 
-没有任何可以设置的东西：没有设置界面，也没有配置文件。下面是本模组使用的固定数值，供参考：
+1.21.11 在 模组菜单 → Tweakeroo 灵魂出窍增强 里有三个设置：**挨打时退出灵魂出窍**（默认关）、**锁定放置方向**（左 Ctrl + L）和 **锁定潜行**（左 Ctrl + 右 Shift）；这个界面也能打开说明书。其他版本没有设置。下面是本模组使用的固定数值：
 
 | 名称 | 数值 | 说明 |
 |---|---|---|

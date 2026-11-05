@@ -40,5 +40,8 @@
 	"freecamplus.list.title": "路标（所有维度）：",
 	"freecamplus.list.empty": "还没有路标",
 	"freecamplus.list.share": "[分享]",
-	"freecamplus.list.remove": "[删除]"
+	"freecamplus.list.remove": "[删除]",
+	"tweakeroo_freecam_plus.manual.title": "灵魂出窍增强说明书",
+	"tweakeroo_freecam_plus.manual.search": "搜索说明书……",
+	"tweakeroo_freecam_plus.manual.button": "说明书"
 }

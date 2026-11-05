@@ -45,6 +45,18 @@ public final class SharedWaypoints {
 	}
 
 	static void register() {
+		// the in-game manual (the settings screen has a button for it on 1.21.11; other versions have no settings screen)
+		ClientCommandRegistrationCallback.EVENT.register((dispatcher, access) -> dispatcher.register(literal("fcpmanual").executes(ctx -> {
+			Minecraft mc = Minecraft.getInstance();
+			// after the chat screen has closed
+			mc.schedule(() -> {
+				//? if >=26.2 {
+				/*mc.gui.setScreen(new ManualScreen(null));
+				*///?} else
+				mc.setScreen(new ManualScreen(null));
+			});
+			return 1;
+		})));
 		ClientCommandRegistrationCallback.EVENT.register((dispatcher, access) -> dispatcher.register(literal("fcpwaypoint")
 				.then(literal("list").executes(ctx -> {
 					list();

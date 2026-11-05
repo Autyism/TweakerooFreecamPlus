@@ -40,5 +40,8 @@
 	"freecamplus.list.title": "Waypoints (all dimensions):",
 	"freecamplus.list.empty": "No waypoints yet",
 	"freecamplus.list.share": "[Share]",
-	"freecamplus.list.remove": "[Remove]"
+	"freecamplus.list.remove": "[Remove]",
+	"tweakeroo_freecam_plus.manual.title": "Freecam Plus manual",
+	"tweakeroo_freecam_plus.manual.search": "Search the manual...",
+	"tweakeroo_freecam_plus.manual.button": "Manual"
 }
